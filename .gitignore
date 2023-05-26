@@ -1,0 +1,23 @@
+myvenv/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE files
+.vscode/
+.idea/
+*.pydevproject
+*.project
+*.settings/
+*.tmproj
+*.pyc
+
+# Miscellaneous
+*.swp
+.DS_Store
