@@ -12,6 +12,7 @@ class HMMtopo:
         self.__transMat = np.zeros((self.__nbrStates , self.__nbrStates))
         self.__pdfIndex = np.zeros((self.__nbrStates - 1 , 1))
 
+
     def setTransition(self, fromState:int, toState:int, transProb:float):
         self.__transMat[fromState][toState] = transProb
 
@@ -28,9 +29,9 @@ class HMMtopo:
             exit(1)
         return self.__transMat[fromState][toState]
     
+    
     def __str__(self) -> str:
         chaine = "phone name " + f"{self.__phoneName}\n"
-
         # print(f"phone name {self.__phoneName}")
         for i in range(self.__nbrStates):
             for j in range(self.__nbrStates):

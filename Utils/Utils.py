@@ -60,7 +60,7 @@ def loadTransition(filePath:str) -> list[HMMtopo]:
     hmmState = None
 
     previousHMM = None
-    for line in lines:
+    for index, line in enumerate(lines):
         phoneNameIndex = line.find("phone = ")
         if phoneNameIndex != -1:
             hmmStateIndex = line.find("hmm-state = ")
@@ -89,13 +89,16 @@ def loadTransition(filePath:str) -> list[HMMtopo]:
             prob , fromState , toState = getProbabityValue(line , probabilityIndex + len("p = "))
 
             if fromState >= 0 and toState >= 0:
-                # print(f"{fromState} -- {prob} --> {toState} previous {previousRealPhoneName}")
                 previousHMM.setTransition(fromState, toState , 
                                         previousHMM.getTransition(fromState, toState) + prob)
             else:
                 previousHMM.setTransition(hmmState, hmmState , 
                                         previousHMM.getTransition(hmmState, hmmState) + prob)
 
+        if index == len(lines) - 1:
+            averageHMM(previousHMM)
+            hmmList.append(previousHMM)
+        
     return hmmList
 
 
