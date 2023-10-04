@@ -1,0 +1,114 @@
+enonce_1  : Zhɨ́ kwé mbɛ̀
+enonce_2  : Zhɨ́ yá' mbɛ̀
+enonce_3  : Pɔ̀ kwé mbɛ̀
+enonce_4  : Ŋwə́ lá'zə́ mbɛ̀
+enonce_5  : Fɔ̀ nzízə́ mbɛ̀
+enonce_6  : Ŋkətú' kwé mbɛ̀
+enonce_7  : Ŋáŋú kwé ŋwə́
+enonce_8  : Zhɨ́ nà' yá' mbɛ̀
+enonce_9  : Ŋwə́ nà' lá'zə́ mbɛ̀
+enonce_10 : Pɔ̀ ná' njà' mbɛ̀
+enonce_11 : Zhɨ́ mə́ ŋkwé mbɛ̀
+enonce_12 : Ŋwə́ mə́ yá' mbɛ̀
+enonce_13 : Fɔ̌ mə́ nzízə́ ŋwə́
+enonce_14 : Ŋwə́ mə́ ŋkwé cə́tɔ̀
+enonce_15 : Ŋkə̀tú' mə́ yá' nòpnà'
+enonce_16 : Zhɨ́ shí yá' mbɛ̀
+enonce_17 : Ŋwə́ shí lá'zə́ mbɛ̀
+enonce_18 : Cə́tɔ̌ shí ŋkwé mbɛ̀
+enonce_19 : Pɔ̌ shí ŋkwé mbɛ̀
+enonce_20 : Ŋwə́ shí yá' mbɛ̀
+enonce_21 : Fɔ̌ shí nzízə́ mbɛ̀
+enonce_22 : Nópnà' shí kwé mbɛ̀
+enonce_23 : Cə́tɔ̌ shí kwé mbɛ̀
+enonce_24 : Zhɨ́ mə́ ŋkwé
+enonce_25 : Nópnà' ná' à ŋkwé
+enonce_26 : Mbə́ tákə̀ zí pwɔ̀k
+enonce_27 : Zhɨ́ nzí ndə̀p kundyə̂ zɛ́
+enonce_28 : Nɔ̂nɔ̀  mə́ nsó ŋkwɔ̀'
+enonce_29 : Nɔ̂nɔ́ mbɛ́ lá'
+enonce_30 : Zhɨ́ mbyɛ̂ fɔ̀
+enonce_31 : Phú mbyɛ̂ mcwɔ̀k
+enonce_32 : Ŋwə́ yɔ̌ nzízə́ ŋkwɔ̀' mə́nté mbí fɔ̀ à
+enonce_33 : Mə̂ fə́ mə́ só â ndzə́
+enonce_34 : Ŋwə́ zə́ sák
+enonce_35 : Ŋwə́ á fə́k sák
+enonce_36 : Zhɨ́ ná' ghwɔ́' zhúə́só
+enonce_37 : Zhɨ́ ná' ndɔ́'ɔ́ sak
+enonce_38 : Zhɨ́ ná' shíí miə́ghə̀
+enonce_39 : Zhɨ́ ná' ndúpzə́ ŋwə́
+enonce_40 : Pɔ́ shí má'zə́ ŋkɛ́
+enonce_41 : Mɛ̂ ŋwə́ shí lɔ́'zə́ ŋwə́
+enonce_42 : Pɔ́ shí ŋá' ŋwə́
+enonce_43 : Pɔ́njwí shí gháptzə́ ŋwə́
+enonce_44 : Pɔ́njwí lá' pú' ŋkwɨ́
+enonce_45 : Zhɨ́ mə́ yá' ndyɔ́k
+enonce_46 : Tá' njɔ́kwɨ́p ná' hɔ́' lá' pɔ́
+enonce_47 : Wete nák mbə́ pɔ̌ shí kwé
+enonce_48 : Wǔp mə́ ŋgápzə́ ŋwə́
+
+#EXCEPT LOCUTEUR_1 
+enonce_5  : Fɔ̀ ndîzə́ mbɛ̀
+enonce_10 : Pɔ̀ ná' yà' mbɛ̀
+enonce_13 : Fɔ̌ mə́ ndîzə́ ŋwə́
+enonce_32 : Ŋwə́ yɔ̌ ndîzə̀ ŋkwɔ̀' mə́nté mbí fɔ̀ à
+enonce_35 : Ŋwə́ fə́k sák
+enonce_44 : Pɔ́njwí pú' ŋkwɨ́
+#EXCEPT LOCUTEUR_2 
+enonce_5  : Fɔ̀ nzísə́ mbɛ̀ 
+enonce_9  : Ŋwə́ nà' lá'sə́ mbɛ̀
+enonce_10 : Pɔ̀ ná' yà' mbɛ̀
+enonce_13 : Fɔ̌ nzísə́ ŋwə́
+enonce_21 : Fɔ̌ shí nzísə́ mbɛ̀
+enonce_31 : Phú mbɛ́ mcwɔ̀k
+enonce_32 : Ŋwə́ yɔ̌ nzísə̀ ŋkwɔ̀' mə́nté mbí fɔ̀ à
+enonce_35 : Ŋwə́ fə́k sák
+enonce_44 : Pɔ́njwí pú' ŋkwɨ́
+#EXCEPT LOCUTEUR_3 
+enonce_5  : Fɔ̀ nzísə́ mbɛ̀
+enonce_10 : Pɔ̀ ná' yà' mbɛ̀
+enonce_13 : Fɔ̌ mə́ nzísə́ ŋwə́
+enonce_21 : Fɔ̌ shí nzísə́ mbɛ̀
+enonce_32 : Ŋwə́ yɔ̌ nzísə̀ ŋkwɔ̀' mə́nté mbí fɔ̀ à
+enonce_35 : Ŋwə́ fə́k sák
+enonce_44 : Pɔ́njwí shí pú' ŋkwɨ
+#EXCEPT LOCUTEUR_4 
+enonce_5 : Fɔ̀ ndîzə́ mbɛ̀
+enonce_10 : Pɔ̀ ná' yà' mbɛ̀
+enonce_21 : Fɔ̌ shí ndîzə́ mbɛ̀
+enonce_35 : Ŋwə́ fə́k sák
+enonce_44 : Pɔ́njwí shí pú' ŋkwɨ
+#EXCEPT LOCUTEUR_5 
+
+#EXCEPT LOCUTEUR_6 
+
+#EXCEPT LOCUTEUR_7
+
+#EXCEPT LOCUTEUR_8 
+
+#EXCEPT LOCUTEUR_9 
+
+#EXCEPT LOCUTEUR_10
+
+#ABSCENT LOCUTEUR_1
+enonce_20
+#ABSCENT LOCUTEUR_2
+
+#ABSCENT LOCUTEUR_3
+
+#ABSCENT LOCUTEUR_4
+
+#ABSCENT LOCUTEUR_5
+
+#ABSCENT LOCUTEUR_6
+
+#ABSCENT LOCUTEUR_7
+
+#ABSCENT LOCUTEUR_8
+
+#ABSCENT LOCUTEUR_9
+
+#ABSCENT LOCUTEUR_10
+
+
+			
