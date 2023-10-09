@@ -81,7 +81,7 @@ print_info "nonsilence_phones.txt file generation in $KALDI_INSTALLATION_PATH/eg
 cut -d ' ' -f 2- "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/lexicon.txt" | sed 's/ /\n/g' | sort -u > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/nonsilence_phones.txt"
 
 print_info "silence_phones.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
-echo –e 'sil'\\n'oov' > $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/silence_phones.txt
+printf 'sil\noov\n' > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/silence_phones.txt"
 
 print_info "optional_silence.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
 echo 'sil' > $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/optional_silence.txt
