@@ -1,0 +1,4 @@
+{
+    "kaldi_installation_path" : "/home/dimitri/kaldi",
+    "python_virtual_environement_path" : "/home/dimitri/NgoaForceAligner/myvenv"
+}

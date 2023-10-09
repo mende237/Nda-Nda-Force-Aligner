@@ -1,5 +1,7 @@
 #!/bin/bash -i
 
+source ../utils.sh
+
 # Check the number of arguments
 if [ $# -ne 1 ]; then
     echo "Error: Please provide a project name."
@@ -7,86 +9,161 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
+nbr_warning=0
+
 projet_name=$1
 
-config_file="../../configs/ConfigKaldi.json"
+config_file="../../configs/Config.json"
 
-if [[ -z "${KALDI_INSTALATION_PATH}" ]]; then
-    echo "Variable does not exist or is empty"
+if [[ -z "${KALDI_INSTALLATION_PATH}" ]]; then
+    print_warning "Variable KALDI_INSTALLATION_PATH does not exist or is empty"
     kaldi_installation_path=$(jq -r '.kaldi_installation_path' "$config_file")
-    echo "export KALDI_INSTALATION_PATH=\"$kaldi_installation_path\"" >> ~/.bashrc
+    echo "export KALDI_INSTALLATION_PATH=\"$kaldi_installation_path\"" >> ~/.bashrc
     if [[ ":$PATH:" != *":$kaldi_installation_path:"* ]]; then
         echo "export PATH=\""\$"PATH:$kaldi_installation_path\"" >> ~/.bashrc
-        echo "Path folder added successfully."
+        print_info "Path folder $kaldi_installation_path added successfully in PATH."
     else
-        echo "Path folder $kaldi_installation_path already exists in PATH."
+        print_warning "Path folder $kaldi_installation_path already exists in PATH."
+        ((nbr_warning++))
     fi
     source ~/.bashrc
-    echo "Variable exported: $KALDI_INSTALATION_PATH"
+    print_info "Variable exported: $KALDI_INSTALLATION_PATH"
 else
-    echo "kaldi installation path exists and has a value: $KALDI_INSTALATION_PATH"
+    print_info "kaldi installation path exists and has a value: $KALDI_INSTALLATION_PATH"
 fi
 
 
+if ! is_folder_exist "$KALDI_INSTALLATION_PATH"; then
+    print_error "The Kaldi installation root folder not exist if you are already install please configure it in the Config.json under the configs folder and run the export.sh script"
+    exit 1
+fi
 
-cd "$KALDI_INSTALATION_PATH/egs"
 
-echo -n "The current directory is: "
-pwd
+cd "$KALDI_INSTALLATION_PATH/egs"
+
+current_directory=$(pwd)
+print_info "The current directory is: $current_directory"
 
 if [ ! -d "$projet_name" ]; then
     mkdir -p "$projet_name"
-    echo "Folder created: $projet_name"
+    print_info "Folder created: $projet_name"
 else
-    echo "Folder already exists: $projet_name"
-    exit 1
+    print_warning "Folder already exists: $projet_name"
+    ((nbr_warning++))
+    # exit 1
 fi
 
 cd "$projet_name"
 
-echo -n "The current directory is: "
-pwd
+current_directory=$(pwd)
+print_info "The current directory is: $current_directory"
 
-echo "creation of symbolic link from folder steps to $projet_name"
-ln -s ../wsj/s5/steps .
-echo "creation of symbolic link from folder utils to $projet_name"
-ln -s ../wsj/s5/utils .
-echo "creation of symbolic link from folder src to $projet_name"
-ln -s ../../src .
-echo "creation of symbolic link from file path.sh to $projet_name"
+if [ ! -d "$KALDI_INSTALLATION_PATH/egs/$projet_name/steps" ]; then
+    ln -s ../wsj/s5/steps .
+    print_info "creation of symbolic link from folder  $KALDI_INSTALLATION_PATH/egs/wjs/s5/steps to $projet_name"
+else
+    print_warning "Folder already exists: steps"
+    ((nbr_warning++))
+fi
+
+
+if [ ! -d "$KALDI_INSTALLATION_PATH/egs/$projet_name/utils" ]; then
+    ln -s ../wsj/s5/utils .
+    print_info "creation of symbolic link from folder $KALDI_INSTALLATION_PATH/egs/wjs/s5/utils to $projet_name"
+else
+    print_warning "Folder already exists: utils"
+    ((nbr_warning++))
+fi
+
+
+if [ ! -d "$KALDI_INSTALLATION_PATH/egs/$projet_name/src" ]; then
+    ln -s ../../src .
+    print_info "creation of symbolic link from folder  $KALDI_INSTALLATION_PATH/src to $projet_name"
+else
+    print_warning "Folder already exists: src"
+    ((nbr_warning++))
+fi
+
+
+print_info "Copy file $KALDI_INSTALLATION_PATH/egs/wjs/s5/path.sh to $projet_name "
 cp ../wsj/s5/path.sh .
 
-echo "Change the path to the kaldi root inside the path.sh file to $KALDI_INSTALATION_PATH"
+print_info "Change the path to the kaldi root inside the path.sh file to $KALDI_INSTALLATION_PATH "
+
 mapfile -t lines < path.sh
 # Modify the first line
-lines[0]="export KALDI_ROOT=$KALDI_INSTALATION_PATH"
+lines[0]="export KALDI_ROOT=$KALDI_INSTALLATION_PATH"
 # Write the modified contents back to the file
 printf '%s\n' "${lines[@]}" > path.sh
 
 if [ ! -d "exp" ]; then
     mkdir -p "exp"
-    echo "Folder created: exp"
+    print_info "Folder created: exp"
 else
-    echo "Folder already exists: exp"
-    exit 1
+    print_warning "Folder already exists: exp"
+    ((nbr_warning++))
 fi
 
 if [ ! -d "conf" ]; then
     mkdir -p "exp"
-    echo "Folder created: conf"
+    print_info "Folder created: conf"
 else
-    echo "Folder already exists: conf"
-    exit 1
+    print_warning "Folder already exists: conf"
+    ((nbr_warning++))
+    # exit 1
 fi
 
 if [ ! -d "data" ]; then
     mkdir -p "data"
-    echo "Folder created: data"
+    print_info "Folder created: data"
 else
-    echo "Folder already exists: data"
-    exit 1
+    print_warning "Folder already exists: data"
+    ((nbr_warning++))
 fi
 
+cd "data"
+
+current_directory=$(pwd)
+print_info "The current directory is: $current_directory"
+
+if [ ! -d "train" ]; then
+    mkdir -p "train"
+    print_info "Folder created: train"
+else
+    print_warning "Folder already exists: train"
+    ((nbr_warning++))
+fi
+
+
+if [ ! -d "lang" ]; then
+    mkdir -p "lang"
+    print_info "Folder created: lang"
+else
+    print_warning "Folder already exists: lang"
+    ((nbr_warning++))
+fi
+
+if [ ! -d "local" ]; then
+    mkdir -p "local"
+    print_info "Folder created: local"
+else
+    print_warning "Folder already exists: local"
+    ((nbr_warning++))
+fi
+
+cd "local"
+current_directory=$(pwd)
+print_info "The current directory is: $current_directory"
+
+if [ ! -d "lang" ]; then
+    mkdir -p "lang"
+    print_info "Folder created: lang"
+else
+    print_warning "Folder already exists: lang"
+    ((nbr_warning++))
+fi
+
+print_info "End of initialization of project named $projet_name. \033[1;33m Warning Number = $nbr_warning \033[0m"
 
 
 
