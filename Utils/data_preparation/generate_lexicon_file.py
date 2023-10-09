@@ -81,8 +81,8 @@ def generate_lexicon_file(input_file, output_file) -> None:
 
 # Check if the input and output file paths are provided
 if len(sys.argv) != 3:
-    print("Usage: python script.py <input_file_path> <output_file_path>")
+    print("Usage: python script.py <input_file_path> <output_folder_path>")
 else:
     input_file = sys.argv[1]
-    output_file = sys.argv[2]
-    generate_lexicon_file(input_file, output_file + "/lexicon.txt")
+    output_file = f"{sys.argv[2]}/lexicon.txt"
+    generate_lexicon_file(input_file, output_file)

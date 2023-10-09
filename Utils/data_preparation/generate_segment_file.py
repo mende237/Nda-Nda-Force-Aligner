@@ -31,9 +31,11 @@ def generate_vaw_scp(input_file_path, output_file_path):
 
 # Check if the input and output file paths are provided
 if len(sys.argv) != 3:
-    print("Usage: python script.py <input_file_path> <output_file_stream>")
+    print("Usage: python script.py <wav.scp_file_path> <output_folder_path>")
 else:
     input_file_path = sys.argv[1]
-    output_file_path = sys.argv[2]
-    generate_vaw_scp(input_file_path, output_file_path + "/segments")
+    output_file_path = f"{sys.argv[2]}/segments"
+    generate_vaw_scp(input_file_path, output_file_path)
 
+
+# echo "segme
