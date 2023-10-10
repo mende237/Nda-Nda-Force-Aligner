@@ -9,7 +9,7 @@ def generate_utterance_to_speaker_file(input_file_path, output_file_path):
             utterance_id, _ = line.split(":")
             prefix, loc_id, _, _ = utterance_id.split('_') 
         
-            output_file_stream.write(f"{utterance_id.strip()} : {prefix}_{loc_id}\n")
+            output_file_stream.write(f"{utterance_id.strip()} {prefix}_{loc_id}\n")
 
     output_file_stream.close()
 

@@ -4,8 +4,8 @@ source ../utils.sh
 
 # Check the number of arguments
 if [ $# -ne 3 ]; then
-    echo "Error: Please provide a project name and the data path folder root"
-    echo "Usage: ./script.sh <project name> <data path folder root> <nbr_speaker>"
+    print_error "Please provide a project name and the data path folder root"
+    print_info "Usage: ./script.sh <project name> <data path folder root> <nbr_speaker>"
     exit 1
 fi
 
@@ -15,16 +15,19 @@ nbr_speaker=$3
 
 config_file="../../configs/Config.json"
 
-if ! is_folder_exist "$KALDI_INSTALLATION_PATH"; then
-    print_error "The Kaldi installation root folder not exist, if you are already install please configure it in the Config.json under the configs folder and run the export.sh script"
-    exit 1
-fi
+
+# if ! is_folder_exist "$KALDI_INSTALLATION_PATH"; then
+#     print_error "The Kaldi installation root folder not exist, if you are already install please configure it in the Config.json under the configs folder and run the export.sh script"
+#     exit 1
+# fi
 
 
-if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name"; then
-    print_error "The projet with name $project_name doesn't exist in kaldi installation root please run the initialize.sh script to create projet"
-    exit 1
-fi
+# if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name"; then
+#     print_error "The projet with name $project_name doesn't exist in kaldi installation root please run the initialize.sh script to create projet"
+#     exit 1
+# fi
+
+project_setup_verification $project_name
 
 
 python_virtual_environement_path=$(jq -r '.python_virtual_environement_path' "$config_file")
@@ -73,6 +76,15 @@ python generate_wav_scp_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/
 print_info "utt2spk file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
 python generate_utterance_to_speaker_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/train
 
+current_script_path=$(pwd)
+
+cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
+print_info "The current directory is: $KALDI_INSTALLATION_PATH/egs/$project_name"
+print_info "spk2utt file generation in data/train"
+utils/fix_data_dir.sh data/train
+
+cd "$current_script_path"
+print_info "The current directory is: $current_script_path"
 
 print_info "lexicon.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
 python generate_lexicon_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang
@@ -95,6 +107,5 @@ print_info "Generation of other folders in data/lang and data/local folders"
 utils/prepare_lang.sh data/local/lang 'oov' data/local data/lang
 
 print_info "Deactivate virtual environment $python_virtual_environement_path"
-# deactivation of python virtual environement
 deactivate
 

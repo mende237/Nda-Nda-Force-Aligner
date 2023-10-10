@@ -1,18 +1,18 @@
 #!/bin/bash -i
 
+
 source ../utils.sh
+
 
 # Check the number of arguments
 if [ $# -ne 1 ]; then
-    echo "Error: Please provide a project name."
-    echo "Usage: ./script.sh <project name>"
+    print_error "Please provide a project name."
+    print_info "Usage: ./script.sh <project name>"
     exit 1
 fi
 
 nbr_warning=0
-
 projet_name=$1
-
 config_file="../../configs/Config.json"
 
 if [[ -z "${KALDI_INSTALLATION_PATH}" ]]; then
@@ -29,7 +29,7 @@ if [[ -z "${KALDI_INSTALLATION_PATH}" ]]; then
     source ~/.bashrc
     print_info "Variable exported: $KALDI_INSTALLATION_PATH"
 else
-    print_info "kaldi installation path exists and has a value: $KALDI_INSTALLATION_PATH"
+    print_info "Kaldi installation path exists and has a value: $KALDI_INSTALLATION_PATH"
 fi
 
 
@@ -105,7 +105,7 @@ else
 fi
 
 if [ ! -d "conf" ]; then
-    mkdir -p "exp"
+    mkdir -p "conf"
     print_info "Folder created: conf"
 else
     print_warning "Folder already exists: conf"
