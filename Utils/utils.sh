@@ -94,6 +94,7 @@ string_to_int(){
     return $((string))
 }
 
+
 delete_file(){
     if [ $# -ne 2 ]; then
         print_error "The function delete_file take two parameter <file_path> and <verbose>"

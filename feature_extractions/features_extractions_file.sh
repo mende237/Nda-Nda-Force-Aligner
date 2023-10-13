@@ -16,14 +16,8 @@ nbr_job=0
 
 
 if [ $# -eq 2 ]; then
-    # nbr_job=$(expr "$2" + 0 2>/dev/null)
     string_to_int "$2"
     nbr_job=$?
-    # if ! [ $? -eq 0 ]; then
-    #     print_error "Conversion failed: Invalid integer"
-    #     print_info "Usage: ./script.sh <project name> <nbr_job> (optional)"
-    #     exit 1
-    # fi
 fi
 
 project_setup_verification $project_name
@@ -67,7 +61,7 @@ print_info "Inside the directory $KALDI_INSTALLATION_PATH/egs/$project_name"
 print_info "Extraction of MFCC characteristics with job number equal to $nbr_job the result will be stored in the $mfccdir directory"
 x=data/train   
 steps/make_mfcc.sh --cmd "$train_cmd" --nj $nbr_job $x exp/make_mfcc/$x $mfccdir  
-steps/compute_cmvn_stats.sh $x exp/make_mfcc/$x $mfccdir
+# steps/compute_cmvn_stats.sh $x exp/make_mfcc/$x $mfccdir
 
 
 

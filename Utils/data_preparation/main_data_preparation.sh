@@ -1,6 +1,11 @@
 #!/bin/bash 
 
-source ../utils.sh
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+
+source "$SCRIPT_DIR/../utils.sh"
+cd "$SCRIPT_DIR/bash_scripts"
+source "$SCRIPT_DIR/bash_scripts/delete_file.sh"
+cd "$SCRIPT_DIR"
 
 # Check the number of arguments
 if [ $# -ne 3 ]; then
@@ -12,20 +17,9 @@ fi
 project_name=$1
 data_root=$2
 nbr_speaker=$3
+nbr_warning=0
 
 config_file="../../configs/Config.json"
-
-
-# if ! is_folder_exist "$KALDI_INSTALLATION_PATH"; then
-#     print_error "The Kaldi installation root folder not exist, if you are already install please configure it in the Config.json under the configs folder and run the export.sh script"
-#     exit 1
-# fi
-
-
-# if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name"; then
-#     print_error "The projet with name $project_name doesn't exist in kaldi installation root please run the initialize.sh script to create projet"
-#     exit 1
-# fi
 
 project_setup_verification $project_name
 
@@ -62,25 +56,49 @@ while [[ ! $response =~ ^[YyNn]$ ]]; do
 done
 
 
+
 print_info "text file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
+if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text; then
+    ((nbr_warning++))
+    print_warning "The file text already exit and the data it contains will be overwritten"
+fi 
 python generate_text_file.py $data_root $KALDI_INSTALLATION_PATH/egs/$project_name/data/train $nbr_speaker
 
 
 print_info "wav.scp file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
+if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/wav.scp; then
+    ((nbr_warning++))
+    print_warning "The file wav.scp already exit and the data it contains will be overwritten"
+fi 
 python generate_wav_scp_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/train $data_root
 
 
-# print_info "segments file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
-# python generate_segment_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/wav.scp $KALDI_INSTALLATION_PATH/egs/$project_name/data/train
+print_info "segments file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
+if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/segments; then
+    ((nbr_warning++))
+    print_warning "The file segments already exit and the data it contains will be overwritten"
+fi 
+python generate_segment_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/wav.scp $KALDI_INSTALLATION_PATH/egs/$project_name/data/train
+
 
 print_info "utt2spk file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
+if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/utt2spk; then
+    ((nbr_warning++))
+    print_warning "The file utt2spk already exit and the data it contains will be overwritten"
+fi 
 python generate_utterance_to_speaker_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/train
+
+
 
 current_script_path=$(pwd)
 
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
 print_info "The current directory is: $KALDI_INSTALLATION_PATH/egs/$project_name"
 print_info "spk2utt file generation in data/train"
+if  is_file_exist spk2utt; then
+    $((nbr_warning++))
+    print_warning "The file spk2utt already exit and the data it contains will be overwritten"
+fi 
 utils/fix_data_dir.sh data/train
 
 cd "$current_script_path"
@@ -93,10 +111,13 @@ print_info "nonsilence_phones.txt file generation in $KALDI_INSTALLATION_PATH/eg
 cut -d ' ' -f 2- "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/lexicon.txt" | sed 's/ /\n/g' | sort -u > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/nonsilence_phones.txt"
 
 print_info "silence_phones.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
-printf 'sil\noov\n' > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/silence_phones.txt"
+printf 'sil\nspn\n' > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/silence_phones.txt"
 
 print_info "optional_silence.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
 echo 'sil' > $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/optional_silence.txt
+
+
+delete_in_lang_local_auto_generated_file "$project_name"
 
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
 
