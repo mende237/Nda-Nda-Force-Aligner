@@ -31,8 +31,8 @@ if is_file_exist $cmd_file_path ; then
 fi
 
 print_info "Creating and configuring the cmd.sh file in the $KALDI_INSTALLATION_PATH/egs/$project_name directory "
-echo "train_cmd=\"queue.pl\"" > "$cmd_file_path"
-echo "decode_cmd=\"queue.pl  --mem 2G\"" >> "$cmd_file_path"
+echo "train_cmd=\"run.pl\"" > "$cmd_file_path"
+echo "decode_cmd=\"run.pl\"" >> "$cmd_file_path"
 
 
 print_info "Add execution right to $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh file"
@@ -52,16 +52,25 @@ print_info "Creating and configuring the mfcc.conf file in the $KALDI_INSTALLATI
 echo "-use-energy=false" > "$mfcc_conf_file_path"
 echo "-sample-frequency=16000" >> "$mfcc_conf_file_path"
 
-# $nbr_job=$([ $nbr_job -eq 0 ] && 1 || $nbr_job)
 nbr_job=$((nbr_job == 0 ? 1 : nbr_job))
 mfccdir=mfcc  
 
+
+
+
+
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
+if is_folder_exist data/lang; then
+    print_info "Delete the contents of the make_mfcc folder"
+    rm -rf exp/make_mfcc/*
+    ((nbr_warning++))
+fi
+
 print_info "Inside the directory $KALDI_INSTALLATION_PATH/egs/$project_name"
 print_info "Extraction of MFCC characteristics with job number equal to $nbr_job the result will be stored in the $mfccdir directory"
 x=data/train   
-steps/make_mfcc.sh --cmd "$train_cmd" --nj $nbr_job $x exp/make_mfcc/$x $mfccdir  
-# steps/compute_cmvn_stats.sh $x exp/make_mfcc/$x $mfccdir
+steps/make_mfcc.sh --cmd "$train_cmd" --nj "$nbr_job" $x exp/make_mfcc/$x $mfccdir  
+steps/compute_cmvn_stats.sh $x exp/make_mfcc/$x $mfccdir
 
 
 
