@@ -6,12 +6,12 @@ def generate_vaw_scp(input_file_path, output_file_path, data_root_path):
     with open(input_file_path, 'r') as file:      
         for line in file:
             line = line.strip()
-            utterance_id, _ = line.split(":")
+            utterance_id, _ = line.split(" ", 1)
             _, loc_id, _, enonce_index = utterance_id.split('_') 
             enonce_index = enonce_index.strip()
             audio_path = f"{data_root_path}/locuteur_{loc_id}/loc_{loc_id}_enonce_{enonce_index}/loc_{loc_id}_enonce_{enonce_index}.wav"
 
-            output_file_stream.write(f"{utterance_id} : {audio_path}\n")
+            output_file_stream.write(f"{utterance_id}_F {audio_path}\n")
 
     output_file_stream.close()
 

@@ -99,6 +99,7 @@ if  is_file_exist spk2utt; then
     $((nbr_warning++))
     print_warning "The file spk2utt already exit and the data it contains will be overwritten"
 fi 
+
 utils/fix_data_dir.sh data/train
 
 cd "$current_script_path"
@@ -108,7 +109,8 @@ print_info "lexicon.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project
 python generate_lexicon_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang
 
 print_info "nonsilence_phones.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
-cut -d ' ' -f 2- "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/lexicon.txt" | sed 's/ /\n/g' | sort -u > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/nonsilence_phones.txt"
+# cut -d ' ' -f 2- "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/lexicon.txt" | sed 's/ /\n/g' | sort -u > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/nonsilence_phones.txt"
+cut -d ' ' -f 2- "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/lexicon.txt" | sed 's/ /\n/g' | sort -u | grep -vE '^(spn|sil)$' > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/nonsilence_phones.txt"
 
 print_info "silence_phones.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
 printf 'sil\nspn\n' > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/silence_phones.txt"
@@ -125,7 +127,7 @@ current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
 
 print_info "Generation of other folders in data/lang and data/local folders"
-utils/prepare_lang.sh data/local/lang 'oov' data/local data/lang
+utils/prepare_lang.sh data/local/lang 'spn' data/local data/lang
 
 print_info "Deactivate virtual environment $python_virtual_environement_path"
 deactivate

@@ -64,13 +64,14 @@ def generate_lexicon_file(input_file, output_file) -> None:
 
     with open(input_file, 'r') as file:
         for line in file:
-            _ , utterance = line.split(':')
+            _ , utterance = line.split(' ', 1)
             line = line.strip()
             for word in utterance.split():
                 my_set_of_word.add(word)
 
 
     with open(output_file, 'w') as file:
+        file.write("!SIL sil\noov spn\n")
         for word in my_set_of_word:
             temp = ""
             for char in decompose(word):

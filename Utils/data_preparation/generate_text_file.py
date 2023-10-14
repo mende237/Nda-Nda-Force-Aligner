@@ -39,7 +39,7 @@ def generate_text_file(input_file, output_file, nbr_locuteur):
         for i in range(nbr_locuteur):
             for key in data[i]:
                 if data[i][key] != None:
-                    file.write(f"loc_{i+1}_{key} : {data[i][key]}\n")
+                    file.write(f"loc_{i+1}_{key} {data[i][key]}\n")
 
 
 if len(sys.argv) != 4:

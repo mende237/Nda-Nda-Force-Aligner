@@ -6,7 +6,7 @@ def generate_utterance_to_speaker_file(input_file_path, output_file_path):
     with open(input_file_path, 'r') as file:      
         for line in file:
             line = line.strip()
-            utterance_id, _ = line.split(":")
+            utterance_id, _ = line.split(" ", 1)
             prefix, loc_id, _, _ = utterance_id.split('_') 
         
             output_file_stream.write(f"{utterance_id.strip()} {prefix}_{loc_id}\n")
