@@ -49,20 +49,23 @@ if is_file_exist $mfcc_conf_file_path; then
 fi
 
 print_info "Creating and configuring the mfcc.conf file in the $KALDI_INSTALLATION_PATH/egs/$project_name/conf directory "
-echo "-use-energy=false" > "$mfcc_conf_file_path"
-echo "-sample-frequency=16000" >> "$mfcc_conf_file_path"
+echo "--use-energy=false" > "$mfcc_conf_file_path"
+echo "--sample-frequency=44100" >> "$mfcc_conf_file_path"
 
 nbr_job=$((nbr_job == 0 ? 1 : nbr_job))
 mfccdir=mfcc  
 
 
-
-
-
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
-if is_folder_exist data/lang; then
+if is_folder_exist data/lang/exp/make_mfcc; then
     print_info "Delete the contents of the make_mfcc folder"
     rm -rf exp/make_mfcc/*
+    ((nbr_warning++))
+fi
+
+if is_folder_exist mfcc; then
+    print_info "Delete the contents of the make_mfcc folder"
+    rm -rf mfcc/*
     ((nbr_warning++))
 fi
 

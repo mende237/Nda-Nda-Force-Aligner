@@ -62,7 +62,7 @@ print_info() {
 
 project_setup_verification(){
     if [ $# -ne 1 ]; then
-        print_error "The function print_info take one parameter <message>"
+        print_error "The function project_setup_verification take one parameter <message>"
         exit 1
     fi
 

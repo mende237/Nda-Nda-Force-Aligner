@@ -20,6 +20,10 @@ def generate_speaker2gender(output_file):
 
 if len(sys.argv) != 2:
     print("Usage: python script.py <output_file_path>")
+    sys.exit(1)
 else:
     output_file = sys.argv[1]
-    generate_speaker2gender(output_file + "/spk2gender")
+    try:
+        generate_speaker2gender(output_file + "/spk2gender")
+    except:
+        sys.exit(1)

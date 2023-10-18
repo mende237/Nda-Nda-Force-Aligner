@@ -19,8 +19,12 @@ def generate_vaw_scp(input_file_path, output_file_path, data_root_path):
 # Check if the input and output file paths are provided
 if len(sys.argv) != 4:
     print("Usage: python script.py <text_file_path> <output_folder_stream> <data_root_path>")
+    sys.exit(1)
 else:
     input_file_path = sys.argv[1]
     output_file_path = f"{sys.argv[2]}/wav.scp"
     data_root_path = sys.argv[3]
-    generate_vaw_scp(input_file_path, output_file_path, data_root_path)
+    try:
+        generate_vaw_scp(input_file_path, output_file_path, data_root_path)
+    except:
+        sys.exit(1)

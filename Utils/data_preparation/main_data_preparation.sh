@@ -1,23 +1,27 @@
 #!/bin/bash 
 
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+calling_script_path=$(pwd)
+script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+cd "$script_path"
+source "../utils.sh"
+cd "$script_path/bash_scripts"
+source "$script_path/bash_scripts/delete_file.sh"
+cd "$script_path"
 
-source "$SCRIPT_DIR/../utils.sh"
-cd "$SCRIPT_DIR/bash_scripts"
-source "$SCRIPT_DIR/bash_scripts/delete_file.sh"
-cd "$SCRIPT_DIR"
+
 
 # Check the number of arguments
 if [ $# -ne 3 ]; then
-    print_error "Please provide a project name and the data path folder root"
+    print_error "Please provide a project name and the data path folder root and number of speakers"
     print_info "Usage: ./script.sh <project name> <data path folder root> <nbr_speaker>"
-    exit 1
+    # exit 1
 fi
 
 project_name=$1
 data_root=$2
 nbr_speaker=$3
 nbr_warning=0
+nbr_error=0
 
 config_file="../../configs/Config.json"
 
@@ -28,13 +32,13 @@ python_virtual_environement_path=$(jq -r '.python_virtual_environement_path' "$c
 
 if [[ "$python_virtual_environement_path" == "null" ]]; then
     print_error "Variable python_virtual_environement_path doesn't exist in Config.json file."
-    exit 1
+    # exit 1
 fi
 
 
 if ! is_file_exist "$python_virtual_environement_path/bin/activate"; then
     print_error "Impossible to activate virtual environement $python_virtual_environement_path"
-    exit 1
+    # exit 1
 fi
 
 print_info "Activating the virtual environment $python_virtual_environement_path"
@@ -60,35 +64,53 @@ done
 print_info "text file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
 if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text; then
     ((nbr_warning++))
-    print_warning "The file text already exit and the data it contains will be overwritten"
+    # print_warning "The file text already exit and the data it contains will be overwritten"
 fi 
 python generate_text_file.py $data_root $KALDI_INSTALLATION_PATH/egs/$project_name/data/train $nbr_speaker
-
+status=$?
+if [ $status -eq 1 ]; then
+    ((nbr_error++))
+    print_error "Error when creating a text file"
+fi
 
 print_info "wav.scp file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
 if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/wav.scp; then
     ((nbr_warning++))
-    print_warning "The file wav.scp already exit and the data it contains will be overwritten"
+    # print_warning "The file wav.scp already exit and the data it contains will be overwritten"
 fi 
 python generate_wav_scp_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/train $data_root
-
+status=$?
+if [ $status -eq 1 ]; then
+    ((nbr_error++))
+    print_error "Error when creating a wav.scp file"
+fi
 
 print_info "segments file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
 if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/segments; then
     ((nbr_warning++))
-    print_warning "The file segments already exit and the data it contains will be overwritten"
+    # print_warning "The file segments already exit and the data it contains will be overwritten"
 fi 
 python generate_segment_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/wav.scp $KALDI_INSTALLATION_PATH/egs/$project_name/data/train
+
+status=$?
+if [ $status -eq 1 ]; then
+    ((nbr_error++))
+    print_error "Error when creating a segments file"
+fi
 
 
 print_info "utt2spk file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
 if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/utt2spk; then
     ((nbr_warning++))
-    print_warning "The file utt2spk already exit and the data it contains will be overwritten"
+    # print_warning "The file utt2spk already exit and the data it contains will be overwritten"
 fi 
 python generate_utterance_to_speaker_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/train
 
-
+status=$?
+if [ $status -eq 1 ]; then
+    ((nbr_error++))
+    print_error "Error when creating utt2spk file"
+fi
 
 current_script_path=$(pwd)
 
@@ -97,7 +119,7 @@ print_info "The current directory is: $KALDI_INSTALLATION_PATH/egs/$project_name
 print_info "spk2utt file generation in data/train"
 if  is_file_exist spk2utt; then
     $((nbr_warning++))
-    print_warning "The file spk2utt already exit and the data it contains will be overwritten"
+    # print_warning "The file spk2utt already exit and the data it contains will be overwritten"
 fi 
 
 utils/fix_data_dir.sh data/train
@@ -132,3 +154,6 @@ utils/prepare_lang.sh data/local/lang 'spn' data/local data/lang
 print_info "Deactivate virtual environment $python_virtual_environement_path"
 deactivate
 
+print_info "End of data preparation for project named $projet_name. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
+
+cd "$calling_script_path"

@@ -32,10 +32,13 @@ def generate_segment_file(input_file_path, output_file_path):
 # Check if the input and output file paths are provided
 if len(sys.argv) != 3:
     print("Usage: python script.py <wav.scp_file_path> <output_folder_path>")
+    sys.exit(1)
 else:
     input_file_path = sys.argv[1]
     output_file_path = f"{sys.argv[2]}/segments"
-    generate_segment_file(input_file_path, output_file_path)
-
+    try:
+        generate_segment_file(input_file_path, output_file_path)
+    except:
+        sys.exit(1)
 
 # echo "segme

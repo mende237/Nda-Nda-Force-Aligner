@@ -44,6 +44,7 @@ def generate_text_file(input_file, output_file, nbr_locuteur):
 
 if len(sys.argv) != 4:
     print("Usage: python script.py <root_data_path> <output_folder_path> <nbr_locuteur>")
+    sys.exit(1)
 else:
     input_file = f"{sys.argv[1]}/utterance.txt"
     output_file = f"{sys.argv[2]}/text"

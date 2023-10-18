@@ -17,7 +17,11 @@ def generate_utterance_to_speaker_file(input_file_path, output_file_path):
 # Check if the input and output file paths are provided
 if len(sys.argv) != 3:
     print("Usage: python script.py <text_file_path> <output_folder_stream>")
+    sys.exit(1)
 else:
     input_file_path = sys.argv[1]
     output_file_path = f"{sys.argv[2]}/utt2spk"
-    generate_utterance_to_speaker_file(input_file_path, output_file_path)
+    try:
+        generate_utterance_to_speaker_file(input_file_path, output_file_path)
+    except:
+        sys.exit(1)
