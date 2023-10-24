@@ -14,7 +14,7 @@ cd "$script_path"
 if [ $# -ne 3 ]; then
     print_error "Please provide a project name and the data path folder root and number of speakers"
     print_info "Usage: ./script.sh <project name> <data path folder root> <nbr_speaker>"
-    # exit 1
+    exit 1
 fi
 
 project_name=$1
@@ -32,13 +32,13 @@ python_virtual_environement_path=$(jq -r '.python_virtual_environement_path' "$c
 
 if [[ "$python_virtual_environement_path" == "null" ]]; then
     print_error "Variable python_virtual_environement_path doesn't exist in Config.json file."
-    # exit 1
+    exit 1
 fi
 
 
 if ! is_file_exist "$python_virtual_environement_path/bin/activate"; then
     print_error "Impossible to activate virtual environement $python_virtual_environement_path"
-    # exit 1
+    exit 1
 fi
 
 print_info "Activating the virtual environment $python_virtual_environement_path"
@@ -149,7 +149,14 @@ current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
 
 print_info "Generation of other folders in data/lang and data/local folders"
-utils/prepare_lang.sh data/local/lang 'spn' data/local data/lang
+utils/prepare_lang.sh data/local/lang 'oov' data/local data/lang
+
+
+status=$?
+if [ $status -eq 1 ]; then
+    ((nbr_error++))
+    print_error "When creating other files in data/local and data/lang folders "
+fi
 
 print_info "Deactivate virtual environment $python_virtual_environement_path"
 deactivate

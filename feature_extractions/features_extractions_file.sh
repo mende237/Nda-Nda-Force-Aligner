@@ -10,6 +10,7 @@ if [ $# -lt 1 ]; then
 fi
 
 nbr_warning=0
+nbr_error=0
 project_name=$1
 nbr_job=0
 
@@ -75,6 +76,12 @@ x=data/train
 steps/make_mfcc.sh --cmd "$train_cmd" --nj "$nbr_job" $x exp/make_mfcc/$x $mfccdir  
 steps/compute_cmvn_stats.sh $x exp/make_mfcc/$x $mfccdir
 
+status=$?
+if [ $status -eq 1 ]; then
+    print_error "An error occured during feature extraction"
+    ((nbr_error++))
+    exit 1
+fi
 
 
-print_info "End of characteristics extraction. \033[1;33m Warning Number = $nbr_warning \033[0m"
+print_info "End of characteristics extraction. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"

@@ -76,6 +76,47 @@ project_setup_verification(){
         print_error "The projet with name $project_name doesn't exist in kaldi installation root please run the initialize.sh script to create projet"
         exit 1
     fi
+
+
+    if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/data/train"; then
+        print_error "The folder data/train not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
+
+    if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/data/lang"; then
+        print_error "The folder data/lang not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
+
+    if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local"; then
+        print_error "The folder data/local not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
+
+    if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"; then
+        print_error "The folder data/local/lang not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
+
+    if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/exp"; then
+        print_error "The folder exp not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
+
+    if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/steps"; then
+        print_error "The folder steps not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
+
+    if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/utils"; then
+        print_error "The folder utils not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
+
+    if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/src"; then
+        print_error "The folder src not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
 }
 
 

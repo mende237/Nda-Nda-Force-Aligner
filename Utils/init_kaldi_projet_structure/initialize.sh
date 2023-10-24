@@ -8,7 +8,7 @@ source ../utils.sh
 if [ $# -ne 1 ]; then
     print_error "Please provide a project name."
     print_info "Usage: ./script.sh <project name>"
-    # exit 1
+    exit 1
 fi
 
 nbr_warning=0
@@ -35,7 +35,7 @@ fi
 
 if ! is_folder_exist "$KALDI_INSTALLATION_PATH"; then
     print_error "The Kaldi installation root folder not exist if you are already install please configure it in the Config.json under the configs folder and run the export.sh script"
-    # exit 1
+    exit 1
 fi
 
 
@@ -50,7 +50,7 @@ if [ ! -d "$projet_name" ]; then
 else
     print_warning "Folder already exists: $projet_name"
     ((nbr_warning++))
-    # exit 1
+    exit 1
 fi
 
 cd "$projet_name"
@@ -110,7 +110,7 @@ if [ ! -d "conf" ]; then
 else
     print_warning "Folder already exists: conf"
     ((nbr_warning++))
-    # exit 1
+    exit 1
 fi
 
 if [ ! -d "data" ]; then
