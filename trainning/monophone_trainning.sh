@@ -122,8 +122,8 @@ if [ $status -eq 1 ]; then
 fi
 
 
+cd "$calling_script_path"
 
 print_info "End of monophone trainning. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
 
-cd "$calling_script_path"
 
