@@ -2,11 +2,11 @@
 
 calling_script_path=$(pwd)
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-cd "$script_path"
+cd "$script_path" || exit 1
 source "../utils.sh"
 cd "$script_path/bash_scripts"
 source "$script_path/bash_scripts/delete_file.sh"
-cd "$script_path"
+cd "$script_path" || exit 1
 
 
 
@@ -114,7 +114,7 @@ fi
 
 current_script_path=$(pwd)
 
-cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
+cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 print_info "The current directory is: $KALDI_INSTALLATION_PATH/egs/$project_name"
 print_info "spk2utt file generation in data/train"
 if  is_file_exist spk2utt; then
@@ -124,7 +124,7 @@ fi
 
 utils/fix_data_dir.sh data/train
 
-cd "$current_script_path"
+cd "$current_script_path" || exit 1
 print_info "The current directory is: $current_script_path"
 
 print_info "lexicon.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
@@ -143,7 +143,7 @@ echo 'sil' > $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/optional
 
 delete_in_lang_local_auto_generated_file "$project_name"
 
-cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
+cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 
 current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
@@ -163,4 +163,4 @@ deactivate
 
 print_info "End of data preparation for project named $projet_name. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
 
-cd "$calling_script_path"
+cd "$calling_script_path" || exit 1

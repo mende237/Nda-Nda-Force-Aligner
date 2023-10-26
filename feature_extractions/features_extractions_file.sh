@@ -3,7 +3,7 @@
 calling_script_path=$(pwd)
 # Get the path to the script
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-cd "$script_path"
+cd "$script_path" || exit 1
 source ../Utils/utils.sh
 
 # Check the number of arguments
@@ -37,23 +37,23 @@ cmd_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
 
 # Check if the file already exists
 if ! is_file_exist $cmd_file_path; then
-    print_warning "File already exists: $cmd_file_path"
-    print_info "Creating and configuring the cmd.sh file in the $KALDI_INSTALLATION_PATH/egs/$project_name directory "
-    echo "train_cmd=\"run.pl\"" > "$cmd_file_path"
-    echo "decode_cmd=\"run.pl\"" >> "$cmd_file_path"
+    print_warning "File doesn't exist : $cmd_file_path"
+    train_cmd="run.pl"
     ((nbr_warning++))
+else
+    print_info "Add execution right to $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh file"
+    chmod +x "$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
+    print_info "Execution of file cmd.sh which is in $KALDI_INSTALLATION_PATH/egs/$project_name"
+    . $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh
 fi
 
 
 
-print_info "Add execution right to $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh file"
-chmod +x "$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
-print_info "Execution of file cmd.sh which is in $KALDI_INSTALLATION_PATH/egs/$project_name"
-. $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh
 
 
 
-cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
+
+cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 print_info "Inside the directory $KALDI_INSTALLATION_PATH/egs/$project_name"
 
 
@@ -75,7 +75,7 @@ if [ "$feature_type" == "--pitch" ]; then
     feature_folder="mfcc_pitch"
     log_folder_name="log_mfcc_pitch"
     if is_folder_exist exp/$log_folder_name; then
-        print_warning "Delete the contents of the exp/log_mfcc folder"
+        print_warning "Delete the contents of the exp/$log_folder_name folder"
         rm -rf the exp/$log_folder_name/*
         ((nbr_warning++))
     fi
@@ -92,11 +92,13 @@ if [ "$feature_type" == "--pitch" ]; then
         echo "--sample-frequency=44100" >> "$pitch_conf_file_path"
         ((nbr_warning++))
     fi
+
+    steps/make_mfcc_pitch.sh --cmd "$train_cmd" --nj "$nbr_job" $x exp/$log_folder_name/$x $feature_folder
 else
     feature_folder="mfcc"
     log_folder_name="log_mfcc"
     if is_folder_exist exp/$log_folder_name; then
-        print_warning "Delete the contents of the exp/log_mfcc folder"
+        print_warning "Delete the contents of the exp/$log_folder_name folder"
         rm -rf the exp/$log_folder_name/*
         ((nbr_warning++))
     fi
@@ -108,7 +110,7 @@ else
     fi
 
     print_info "Extraction of MFCC characteristics with job number equal to $nbr_job the result will be stored in the $mfccdir directory"
-    steps/make_mfcc.sh --cmd "$train_cmd" --nj "$nbr_job" $x exp/log_mfcc/$x $feature_folder  
+    steps/make_mfcc.sh --cmd "$train_cmd" --nj "$nbr_job" $x exp/$log_folder_name/$x $feature_folder  
 fi
 
 status=$?
@@ -131,6 +133,6 @@ fi
 
 
 
-cd "$calling_script_path"
+cd "$calling_script_path" || exit 1
 
 print_info "End of characteristics extraction. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"

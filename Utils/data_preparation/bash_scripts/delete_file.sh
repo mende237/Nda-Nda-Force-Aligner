@@ -15,7 +15,7 @@ delete_in_lang_local_auto_generated_file() {
     previous_directory=$(pwd)
 
     project_setup_verification $project_name
-    cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
+    cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
     current_directory=$(pwd)
     print_info "The current directory is $current_directory"
     print_info "Delete all containt which are in data/lang"
@@ -33,7 +33,7 @@ delete_in_lang_local_auto_generated_file() {
     print_info "Delete file lexiconp.txt which is data/local/lang"
     delete_file data/local/lang/lexiconp.txt 1
 
-    cd "$previous_directory"
+    cd "$previous_directory" || exit 1
 }
 
 

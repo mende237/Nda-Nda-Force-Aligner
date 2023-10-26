@@ -1,5 +1,9 @@
 #!/bin/bash -i
 
+calling_script_path=$(pwd)
+# Get the path to the script
+script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+cd "$script_path" || exit 1
 
 source ../utils.sh
 
@@ -39,7 +43,7 @@ if ! is_folder_exist "$KALDI_INSTALLATION_PATH"; then
 fi
 
 
-cd "$KALDI_INSTALLATION_PATH/egs"
+cd "$KALDI_INSTALLATION_PATH/egs" || exit 1
 
 current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
@@ -53,7 +57,7 @@ else
     exit 1
 fi
 
-cd "$projet_name"
+cd "$projet_name" || exit 1
 
 current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
@@ -121,7 +125,7 @@ else
     ((nbr_warning++))
 fi
 
-cd "data"
+cd "data" || exit 1
 
 current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
@@ -151,7 +155,7 @@ else
     ((nbr_warning++))
 fi
 
-cd "local"
+cd "local" || exit 1
 current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
 
@@ -167,6 +171,6 @@ print_info "End of initialization of project named $projet_name. \033[1;33m Warn
 
 
 
-
+cd "$calling_script_path" || exit 1
 
 

@@ -3,7 +3,7 @@
 calling_script_path=$(pwd)
 # Get the path to the script
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
-cd "$script_path"
+cd "$script_path" || exit 1
 source ../Utils/utils.sh
 
 nbr_warning=0
@@ -62,7 +62,7 @@ else
 fi
 
 
-cd "$KALDI_INSTALLATION_PATH/egs/$project_name"
+cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
 
@@ -105,12 +105,12 @@ if is_folder_exist exp/$destdir; then
     rm -rf exp/$destdir/*
 fi
 
-if ! is_file_exist data/$config_file_name; then
-    print_warning "The config trainning file doesn't exist inside data folder. The default configurations will be applied"
+if ! is_file_exist conf/$config_file_name; then
+    print_warning "The config trainning file doesn't exist inside conf folder. The default configurations will be applied"
     ((nbr_warning++))
     steps/train_mono.sh data/$destdir data/lang exp/$destdir
 else
-    steps/train_mono.sh --config data/$config_file_name data/$destdir data/lang exp/$destdir
+    steps/train_mono.sh --config conf/$config_file_name data/$destdir data/lang exp/$destdir
 fi
 
 
@@ -122,7 +122,7 @@ if [ $status -eq 1 ]; then
 fi
 
 
-cd "$calling_script_path"
+cd "$calling_script_path" || exit 1
 
 print_info "End of monophone trainning. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
 
