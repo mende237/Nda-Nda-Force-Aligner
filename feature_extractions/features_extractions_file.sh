@@ -27,8 +27,7 @@ nbr_job=0
 
 
 if [ $# -eq 3 ]; then
-    string_to_int "$3"
-    nbr_job=$?
+    nbr_job=$(string_to_int "$3")
 fi
 
 project_setup_verification $project_name

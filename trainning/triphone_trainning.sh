@@ -39,15 +39,26 @@ project_name=$2
 
 project_setup_verification $project_name
 
+cmd_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
+if ! is_file_exist $cmd_file_path; then
+    print_warning "File doesn't exist : $cmd_file_path"
+    train_cmd="run.pl"
+    ((nbr_warning++))
+else
+    print_info "Add execution right to $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh file"
+    chmod +x "$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
+    print_info "Execution of file cmd.sh which is in $KALDI_INSTALLATION_PATH/egs/$project_name"
+    . $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh
+fi
+
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
 
 
-string_to_int $3
-nbr_leaves=$?
-string_to_int $4
-nbr_gauss=$?
+
+nbr_leaves=$(string_to_int $3)
+nbr_gauss=$(string_to_int $4)
 align_folder=$5
 dest_folder=$6
 conf_option=
@@ -61,6 +72,9 @@ if [ $# -eq 7 ]; then
     fi
     conf_option="--config conf/$conf_file_name"
 fi
+
+echo "nbr leaves $nbr_leaves"
+echo "nbr gauss $nbr_gauss"
 
 if [ $nbr_leaves -ge $nbr_gauss ]; then
     print_error "The number of leaves must be less than the number of gaussian"
@@ -83,16 +97,13 @@ fi
 
 case $option in
     "--delta")
-        echo "delta trainning."
-        # steps/train_deltas.sh $confi_option --cmd "$train_cmd" $nbr_leaves $nbr_gauss data/train data/lang exp/$align_folder exp/$dest_folder
+        steps/train_deltas.sh $confi_option --cmd "$train_cmd" $nbr_leaves $nbr_gauss data/train data/lang exp/$align_folder exp/$dest_folder
         ;;
     "--lda")
-        echo "lda trainning"
-        # steps/train_lda_mllt.sh $conf_option --cmd "$train_cmd" $nbr_gauss $nbr_leaves data/train data/lang exp/$align_folder exp/$dest_folder
+        steps/train_lda_mllt.sh $conf_option --cmd "$train_cmd" $nbr_gauss $nbr_leaves data/train data/lang exp/$align_folder exp/$dest_folder
         ;;
     "--sat")
-        echo "sat trainning"
-        # steps/train_sat.sh  $conf_option --cmd "$train_cmd" $nbr_gauss $nbr_leaves data/train data/lang exp/$align_folder exp/$dest_folder
+        steps/train_sat.sh  $conf_option --cmd "$train_cmd" $nbr_gauss $nbr_leaves data/train data/lang exp/$align_folder exp/$dest_folder
         ;;
 esac
 
@@ -106,8 +117,5 @@ if [ $status -eq 1 ]; then
     ((nbr_error++))
     exit 1
 fi
-
-
-
 
 cd "$calling_script_path" || exit 1

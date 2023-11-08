@@ -132,7 +132,7 @@ string_to_int(){
         exit 1
     fi
 
-    return $((string))
+    echo "$((string))"
 }
 
 
@@ -143,10 +143,9 @@ delete_file(){
     fi
 
     local file_path=$1
-    string_to_int "$2"
-    # $verbose=$(string_to_int $2)
+    # string_to_int "$2"
+    local $verbose=$(string_to_int $2)
     
-    local verbose=$?
 
     if ! is_file_exist $file_path; then
         if [ $verbose -eq 0 ]; then
@@ -167,8 +166,7 @@ delete_all(){
     fi
 
     local folder_path=$1
-    local string_to_int $2
-    local verbose=$?
+    local verbose=$(string_to_int $2)
     if ! is_folder_exist $folder_path; then
         if $verbose; then
             print_warning "File $file_path doesn't exit"
