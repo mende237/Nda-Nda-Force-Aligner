@@ -49,4 +49,7 @@ else:
     input_file = f"{sys.argv[1]}/utterance.txt"
     output_file = f"{sys.argv[2]}/text"
     nbr_loc = int(sys.argv[3])
-    generate_text_file(input_file, output_file , nbr_loc)
+    try:
+        generate_text_file(input_file, output_file , nbr_loc)
+    except:
+        sys.exit(1)

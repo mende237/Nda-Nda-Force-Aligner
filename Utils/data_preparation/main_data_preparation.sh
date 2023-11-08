@@ -4,7 +4,7 @@ calling_script_path=$(pwd)
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 cd "$script_path" || exit 1
 source "../utils.sh"
-cd "$script_path/bash_scripts"
+cd "$script_path/bash_scripts" || exit 1
 source "$script_path/bash_scripts/delete_file.sh"
 cd "$script_path" || exit 1
 
@@ -13,7 +13,7 @@ cd "$script_path" || exit 1
 # Check the number of arguments
 if [ $# -ne 3 ]; then
     print_error "Please provide a project name and the data path folder root and number of speakers"
-    print_info "Usage: ./script.sh <project name> <data path folder root> <nbr_speaker>"
+    print_info "Usage: $0 <project name> <data path folder root> <nbr_speaker>"
     exit 1
 fi
 

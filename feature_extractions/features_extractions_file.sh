@@ -9,7 +9,7 @@ source ../Utils/utils.sh
 # Check the number of arguments
 if [ $# -ne 2 ] && [ $# -ne 3 ]; then
     print_error "Please provide a project name."
-    print_info "Usage: ./script.sh --pitch | --mfcc <project name> <nbr_job> (optional)"
+    print_info "Usage: $0 --pitch | --mfcc <project name> <nbr_job> (optional)"
     exit 1
 fi
 
