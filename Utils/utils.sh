@@ -93,6 +93,11 @@ project_setup_verification(){
         exit 1
     fi
 
+    if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/local_lm/data"; then
+        print_error "The folder data/local/local_lm/data not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
+
     if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"; then
         print_error "The folder data/local/lang not exit in $project_name. Please run the initialize.sh script to create projet"
         exit 1
@@ -144,7 +149,7 @@ delete_file(){
 
     local file_path=$1
     # string_to_int "$2"
-    local $verbose=$(string_to_int $2)
+    local verbose=$(string_to_int $2)
     
 
     if ! is_file_exist $file_path; then

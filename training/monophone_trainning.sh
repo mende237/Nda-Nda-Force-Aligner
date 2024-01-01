@@ -51,6 +51,21 @@ fi
 
 project_name=$1
 project_setup_verification $project_name
+
+cmd_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
+if ! is_file_exist $cmd_file_path; then
+    print_warning "File doesn't exist : $cmd_file_path"
+    train_cmd="run.pl"
+    ((nbr_warning++))
+else
+    print_info "Add execution right to $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh file"
+    chmod +x "$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
+    print_info "Execution of file cmd.sh which is in $KALDI_INSTALLATION_PATH/egs/$project_name"
+    . $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh
+fi
+
+
+
 if [[ $spk_list || $utt_list ]]; then
   numutt=
   dest_folder=$2
@@ -108,9 +123,9 @@ fi
 if ! is_file_exist conf/$config_file_name; then
     print_warning "The config trainning file doesn't exist inside conf folder. The default configurations will be applied"
     ((nbr_warning++))
-    steps/train_mono.sh data/$dest_folder data/lang exp/$dest_folder
+    steps/train_mono.sh --cmd "$train_cmd" data/$dest_folder data/lang exp/$dest_folder
 else
-    steps/train_mono.sh --config conf/$config_file_name data/$dest_folder data/lang exp/$dest_folder
+    steps/train_mono.sh --config conf/$config_file_name --cmd "$train_cmd" data/$dest_folder data/lang exp/$dest_folder
 fi
 
 
@@ -121,9 +136,9 @@ if [ $status -eq 1 ]; then
     exit 1
 fi
 
+print_info "End of monophone trainning. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
 
 cd "$calling_script_path" || exit 1
 
-print_info "End of monophone trainning. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
 
 

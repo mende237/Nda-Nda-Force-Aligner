@@ -42,6 +42,22 @@ else
 fi
 
 
+project_setup_verification $project_name
+
+
+cmd_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
+if ! is_file_exist $cmd_file_path; then
+    print_warning "File doesn't exist : $cmd_file_path"
+    train_cmd="run.pl"
+    ((nbr_warning++))
+else
+    print_info "Add execution right to $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh file"
+    chmod +x "$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
+    print_info "Execution of file cmd.sh which is in $KALDI_INSTALLATION_PATH/egs/$project_name"
+    . $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh
+fi
+
+
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1;
 current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
@@ -60,19 +76,6 @@ if ! is_file_exist conf/$configuration_file_name; then
     ((nbr_warning++))
 else
     config_option="--config conf/$configuration_file_name"
-fi
-
-
-cmd_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
-if ! is_file_exist $cmd_file_path; then
-    print_warning "File doesn't exist : $cmd_file_path"
-    train_cmd="run.pl"
-    ((nbr_warning++))
-else
-    print_info "Add execution right to $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh file"
-    chmod +x "$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
-    print_info "Execution of file cmd.sh which is in $KALDI_INSTALLATION_PATH/egs/$project_name"
-    . $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh
 fi
 
 

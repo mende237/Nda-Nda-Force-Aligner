@@ -52,8 +52,8 @@ if [ ! -d "$projet_name" ]; then
     mkdir -p "$projet_name"
     print_info "Folder created: $projet_name"
 else
-    print_warning "Folder already exists: $projet_name"
-    ((nbr_warning++))
+    print_error "Folder already exists: $projet_name"
+    ((nbr_error++))
     exit 1
 fi
 
@@ -69,6 +69,7 @@ else
     print_warning "Folder already exists: steps"
     ((nbr_warning++))
 fi
+
 
 
 if [ ! -d "$KALDI_INSTALLATION_PATH/egs/$projet_name/utils" ]; then
@@ -164,6 +165,32 @@ if [ ! -d "lang" ]; then
     print_info "Folder created: lang"
 else
     print_warning "Folder already exists: lang"
+    ((nbr_warning++))
+fi
+
+if [ ! -d "local_lm" ]; then
+    mkdir -p "local_lm"
+    print_info "Folder created: local_lm"
+else
+    print_warning "Folder already exists: local_lm"
+    ((nbr_warning++))
+fi
+
+cd "local_lm" || exit 1
+
+if [ ! -d "data" ]; then
+    mkdir -p "data"
+    print_info "Folder created: data"
+else
+    print_warning "Folder already exists: data"
+    ((nbr_warning++))
+fi
+
+if [ ! -d "nda'nda'" ]; then
+    mkdir -p "nda'nda'"
+    print_info "Folder created: nda'nda'"
+else
+    print_warning "Folder already exists: nda'nda'"
     ((nbr_warning++))
 fi
 

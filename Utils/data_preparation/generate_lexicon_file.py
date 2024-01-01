@@ -59,7 +59,7 @@ def decompose(string:str) -> list[str]:
     return characters
 
 
-def generate_lexicon_file(input_file, output_file) -> None:
+def generate_lexicon_file(input_file, output_folder) -> None:
     my_set_of_word = set()
 
     with open(input_file, 'r') as file:
@@ -70,7 +70,7 @@ def generate_lexicon_file(input_file, output_file) -> None:
                 my_set_of_word.add(word)
 
 
-    with open(output_file, 'w') as file:
+    with open(f"{output_folder}/lang/lexicon.txt", 'w') as file:
         file.write("!SIL sil\noov spn\n")
         for word in my_set_of_word:
             temp = ""
@@ -78,6 +78,11 @@ def generate_lexicon_file(input_file, output_file) -> None:
                 temp = temp + char + " "
             temp = temp.strip()
             file.write(f"{word} {temp}\n")
+    
+
+    with open(f"{output_folder}/local_lm/data/wordlist", 'w') as file:
+        for word in my_set_of_word:
+            file.write(f"{word}\n")
 
 
 # Check if the input and output file paths are provided
@@ -86,8 +91,8 @@ if len(sys.argv) != 3:
     sys.exit(1)
 else:
     input_file = sys.argv[1]
-    output_file = f"{sys.argv[2]}/lexicon.txt"
+    output_folder = sys.argv[2]
     try:
-        generate_lexicon_file(input_file, output_file)
+        generate_lexicon_file(input_file, output_folder)
     except:
         sys.exit(1)

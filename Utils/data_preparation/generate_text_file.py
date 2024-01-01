@@ -1,7 +1,7 @@
 import sys
 import re
 
-def generate_text_file(input_file, output_file, nbr_locuteur):
+def generate_text_file(input_file, text_output_file, lm_data_output_file, nbr_locuteur):
     data = []
     for _ in range(nbr_locuteur):
         data.append({})
@@ -34,22 +34,28 @@ def generate_text_file(input_file, output_file, nbr_locuteur):
                 except_area = False
                 loc_number = int(re.search(r'\d+', line).group()) - 1
 
-
-    with open(output_file, 'w') as file:
+    with open(text_output_file, 'w') as file:
         for i in range(nbr_locuteur):
             for key in data[i]:
                 if data[i][key] != None:
                     file.write(f"loc_{i+1}_{key} {data[i][key]}\n")
 
+    with open(lm_data_output_file, 'w') as file:
+        for i in range(nbr_locuteur):
+            for key in data[i]:
+                if data[i][key] != None:
+                    file.write(f"{data[i][key]}\n")
 
-if len(sys.argv) != 4:
-    print("Usage: python script.py <root_data_path> <output_folder_path> <nbr_locuteur>")
+
+if len(sys.argv) != 5:
+    print("Usage: python script.py <root_data_path> <text_output_file> <lm_data_output_file> <nbr_locuteur>")
     sys.exit(1)
 else:
     input_file = f"{sys.argv[1]}/utterance.txt"
-    output_file = f"{sys.argv[2]}/text"
-    nbr_loc = int(sys.argv[3])
+    text_output_file = sys.argv[2]
+    lm_data_output_file = sys.argv[3]
+    nbr_loc = int(sys.argv[4])
     try:
-        generate_text_file(input_file, output_file , nbr_loc)
+        generate_text_file(input_file, text_output_file, lm_data_output_file, nbr_loc)
     except:
         sys.exit(1)

@@ -1,5 +1,9 @@
 #!/bin/bash 
 
+# calling_script_path=$(pwd)
+# script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+# cd "$script_path" || exit 1
+
 source ../../utils.sh
 
 
@@ -38,10 +42,7 @@ delete_in_lang_local_auto_generated_file() {
 
 
 
-
-
-
-
+# cd "$calling_script_path" || exit 1
 
 
 

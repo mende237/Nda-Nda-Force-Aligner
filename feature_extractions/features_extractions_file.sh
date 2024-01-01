@@ -17,8 +17,9 @@ nbr_warning=0
 nbr_error=0
 project_name=$2
 
+
 if [ "$1" != "--mfcc" ] && [ "$1" != "--pitch" ]; then
-    print_info "Usage: ./script.sh --pitch | --mfcc <project name> <nbr_job> (optional)"
+    print_info "Usage: $0 --pitch | --mfcc <project name> <nbr_job> (optional)"
     exit 1
 fi
 
@@ -45,10 +46,6 @@ else
     print_info "Execution of file cmd.sh which is in $KALDI_INSTALLATION_PATH/egs/$project_name"
     . $KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh
 fi
-
-
-
-
 
 
 

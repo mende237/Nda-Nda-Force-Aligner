@@ -110,7 +110,6 @@ esac
 
 
 
-
 status=$?
 if [ $status -eq 1 ]; then
     print_error "During delta trainning"

@@ -59,14 +59,19 @@ while [[ ! $response =~ ^[YyNn]$ ]]; do
     fi
 done
 
+text_file=data/train/text
+lm_root_data=data/local/local_lm/data/nda\'nda\'
+lm_data_file=data/local/local_lm/data/nda\'nda\'/train.tokens
+lm_dir=data/local/local_lm
+output_model_dir=$lm_dir/arpa
 
-
-print_info "text file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
-if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text; then
+print_info "text file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/$text_file"
+if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/$text_file; then
     ((nbr_warning++))
     # print_warning "The file text already exit and the data it contains will be overwritten"
 fi 
-python generate_text_file.py $data_root $KALDI_INSTALLATION_PATH/egs/$project_name/data/train $nbr_speaker
+
+python generate_text_file.py $data_root $KALDI_INSTALLATION_PATH/egs/$project_name/$text_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $nbr_speaker
 status=$?
 if [ $status -eq 1 ]; then
     ((nbr_error++))
@@ -127,8 +132,13 @@ utils/fix_data_dir.sh data/train
 cd "$current_script_path" || exit 1
 print_info "The current directory is: $current_script_path"
 
-print_info "lexicon.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
-python generate_lexicon_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang
+loxicon_folder=data/local
+wordlist_folder=data/local/local_lm/data
+
+
+print_info "lexicon.txt and wordlist file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/$loxicon_folder and $KALDI_INSTALLATION_PATH/egs/$project_name/$wordlist_folder"
+python generate_lexicon_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/$loxicon_folder
+
 
 print_info "nonsilence_phones.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
 # cut -d ' ' -f 2- "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/lexicon.txt" | sed 's/ /\n/g' | sort -u > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/nonsilence_phones.txt"
@@ -149,14 +159,53 @@ current_directory=$(pwd)
 print_info "The current directory is: $current_directory"
 
 print_info "Generation of other folders in data/lang and data/local folders"
+
 utils/prepare_lang.sh data/local/lang 'oov' data/local data/lang
 
+# utils/prepare_lang.sh --position-dependent-phones false data/local/dict "oov" data/local/lang data/lang
 
 status=$?
 if [ $status -eq 1 ]; then
     ((nbr_error++))
     print_error "When creating other files in data/local and data/lang folders "
 fi
+
+cd "$script_path" || exit 1
+print_info "The current directory is: $script_path"
+
+response=""
+while [[ ! $response =~ ^[YyNn]$ ]]; do
+    read -p "Would you like to train language model with data inside $KALDI_INSTALLATION_PATH/egs/$project_name/$text_file ? (y/n): " response
+    if [[ $response =~ ^[Yy]$ ]]; then
+        if [ ! -d "$KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out" ]; then
+            mkdir -p "$KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out"
+            print_info "Folder created: $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out"
+        else
+            print_warning "Folder already exists: $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out"
+            ((nbr_warning++))
+        fi
+        cp $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data/valid.tokens
+        cp $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data/test.tokens
+
+        python ../../training/language_model/ngram-lm/main.py --order 3 \
+         --interpolate --save-arpa --name nda'nda' \
+         --data $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data \
+         --out  $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out \
+         --output-model $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir
+
+        status=$?
+        if [ $status -eq 1 ]; then
+            ((nbr_error++))
+            print_error "During language model training"
+            exit 1
+        fi
+    elif [[ $response =~ ^[Nn]$ ]]; then
+        print_info "Skip language model training"
+    else
+        echo "Invalid response. Please enter 'y' for yes or 'n' for no."
+    fi
+done
+
 
 print_info "Deactivate virtual environment $python_virtual_environement_path"
 deactivate
