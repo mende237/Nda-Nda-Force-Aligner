@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 calling_script_path=$(pwd)
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
@@ -123,7 +123,7 @@ cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 print_info "The current directory is: $KALDI_INSTALLATION_PATH/egs/$project_name"
 print_info "spk2utt file generation in data/train"
 if  is_file_exist spk2utt; then
-    $((nbr_warning++))
+    ((nbr_warning++))
     # print_warning "The file spk2utt already exit and the data it contains will be overwritten"
 fi 
 
@@ -186,18 +186,36 @@ while [[ ! $response =~ ^[YyNn]$ ]]; do
         fi
         cp $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data/valid.tokens
         cp $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data/test.tokens
-
-        python ../../training/language_model/ngram-lm/main.py --order 3 \
-         --interpolate --save-arpa --name nda'nda' \
+        model_order=3
+        model_name=nda\'nda\'
+        python ../../training/language_model/ngram-lm/main.py --order $model_order \
+         --interpolate --save-arpa --name $model_name \
          --data $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data \
          --out  $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out \
          --output-model $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir
+
+        gzip -f $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir/$model_name"."$model_order"gram.arpa"
 
         status=$?
         if [ $status -eq 1 ]; then
             ((nbr_error++))
             print_error "During language model training"
-            exit 1
+        else
+            print_info "End of language model training check the output inside folders $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir and $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out"
+        fi
+
+        cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
+        current_directory=$(pwd)
+        print_info "The current directory is: $current_directory"
+        
+        print_info "Conversion of the language model from arpa format to FST format"
+        utils/format_lm.sh data/lang $output_model_dir/$model_name"."$model_order"gram.arpa.gz" data/local/lang/lexicon.txt data/lang
+
+        if [ $status -eq 1 ]; then
+            ((nbr_error++))
+            print_error "During language model conversion"
+        else
+            print_info "End of conversion see result inside folder data/lang"
         fi
     elif [[ $response =~ ^[Nn]$ ]]; then
         print_info "Skip language model training"
@@ -210,6 +228,6 @@ done
 print_info "Deactivate virtual environment $python_virtual_environement_path"
 deactivate
 
-print_info "End of data preparation for project named $projet_name. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
+print_info "End of data preparation for project named $project_name. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
 
 cd "$calling_script_path" || exit 1

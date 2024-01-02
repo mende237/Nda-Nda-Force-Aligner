@@ -53,20 +53,12 @@ cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 print_info "Inside the directory $KALDI_INSTALLATION_PATH/egs/$project_name"
 
 
-mfcc_conf_file_path=$KALDI_INSTALLATION_PATH/egs/$project_name/conf/mfcc.conf
-if ! is_file_exist $mfcc_conf_file_path; then
-    print_warning "File doesn't exist : $mfcc_conf_file_path"
-    print_info "Creating and configuring the mfcc.conf file in the $KALDI_INSTALLATION_PATH/egs/$project_name/conf directory "
-    echo "--use-energy=false" > "$mfcc_conf_file_path"
-    echo "--sample-frequency=44100" >> "$mfcc_conf_file_path"
-    ((nbr_warning++))
-fi
-
 nbr_job=$((nbr_job == 0 ? 1 : nbr_job))
 feature_folder=
 x=data/train 
 log_folder_name=
 pitch_conf_file_path=$KALDI_INSTALLATION_PATH/egs/$project_name/conf/pitch.conf
+mfcc_conf_file_path=$KALDI_INSTALLATION_PATH/egs/$project_name/conf/mfcc.conf
 if [ "$feature_type" == "--pitch" ]; then
     feature_folder="mfcc_pitch"
     log_folder_name="log_mfcc_pitch"
@@ -91,6 +83,13 @@ if [ "$feature_type" == "--pitch" ]; then
 
     steps/make_mfcc_pitch.sh --cmd "$train_cmd" --nj "$nbr_job" $x exp/$log_folder_name/$x $feature_folder
 else
+    if ! is_file_exist $mfcc_conf_file_path; then
+        print_warning "File doesn't exist : $mfcc_conf_file_path"
+        print_info "Creating and configuring the mfcc.conf file in the $KALDI_INSTALLATION_PATH/egs/$project_name/conf directory "
+        echo "--use-energy=false" > "$mfcc_conf_file_path"
+        echo "--sample-frequency=44100" >> "$mfcc_conf_file_path"
+        ((nbr_warning++))
+    fi
     feature_folder="mfcc"
     log_folder_name="log_mfcc"
     if is_folder_exist exp/$log_folder_name; then
