@@ -21,3 +21,4 @@ build/
 # Miscellaneous
 *.swp
 .DS_Store
+*.log

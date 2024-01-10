@@ -1,4 +1,10 @@
 import sys
+import logging
+
+# Configure the logging module
+logging.basicConfig(filename='../../logs/error.log', level=logging.ERROR,
+                    format='%(asctime)s - %(levelname)s - %(filename)s - Line %(lineno)d - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 speaker2gender = {
     "loc_1" : "f",
@@ -22,8 +28,9 @@ if len(sys.argv) != 2:
     print("Usage: python script.py <output_file_path>")
     sys.exit(1)
 else:
-    output_file = sys.argv[1]
     try:
+        output_file = sys.argv[1]
         generate_speaker2gender(output_file + "/spk2gender")
-    except:
+    except Exception as error:
+        logging.error(str(error))
         sys.exit(1)

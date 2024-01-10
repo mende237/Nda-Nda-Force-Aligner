@@ -70,6 +70,14 @@ else
     ((nbr_warning++))
 fi
 
+if [ ! -d "$KALDI_INSTALLATION_PATH/egs/$projet_name/local" ]; then
+    ln -s ../wsj/s5/local .
+    print_info "creation of symbolic link from folder  $KALDI_INSTALLATION_PATH/egs/wjs/s5/local to $projet_name"
+else
+    print_warning "Folder already exists: local"
+    ((nbr_warning++))
+fi
+
 
 
 if [ ! -d "$KALDI_INSTALLATION_PATH/egs/$projet_name/utils" ]; then
@@ -139,6 +147,14 @@ else
     ((nbr_warning++))
 fi
 
+if [ ! -d "test" ]; then
+    mkdir -p "test"
+    print_info "Folder created: test"
+else
+    print_warning "Folder already exists: test"
+    ((nbr_warning++))
+fi
+
 
 if [ ! -d "lang" ]; then
     mkdir -p "lang"
@@ -185,6 +201,16 @@ else
     print_warning "Folder already exists: data"
     ((nbr_warning++))
 fi
+
+if [ ! -d "arpa" ]; then
+    mkdir -p "arpa"
+    print_info "Folder created: arpa"
+else
+    print_warning "Folder already exists: arpa"
+    ((nbr_warning++))
+fi
+
+cd "data" || exit 1
 
 if [ ! -d "nda'nda'" ]; then
     mkdir -p "nda'nda'"

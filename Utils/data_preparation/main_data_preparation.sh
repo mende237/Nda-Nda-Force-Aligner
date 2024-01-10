@@ -11,9 +11,9 @@ cd "$script_path" || exit 1
 
 
 # Check the number of arguments
-if [ $# -ne 3 ]; then
+if [ $# -ne 2 ]; then
     print_error "Please provide a project name and the data path folder root and number of speakers"
-    print_info "Usage: $0 <project name> <data path folder root> <nbr_speaker>"
+    print_info "Usage: $0 <project name> <data path folder root>"
     exit 1
 fi
 
@@ -65,69 +65,13 @@ lm_data_file=data/local/local_lm/data/nda\'nda\'/train.tokens
 lm_dir=data/local/local_lm
 output_model_dir=$lm_dir/arpa
 
-print_info "text file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/$text_file"
-if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/$text_file; then
-    ((nbr_warning++))
-    # print_warning "The file text already exit and the data it contains will be overwritten"
-fi 
 
-python generate_text_file.py $data_root $KALDI_INSTALLATION_PATH/egs/$project_name/$text_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $nbr_speaker
-status=$?
-if [ $status -eq 1 ]; then
-    ((nbr_error++))
-    print_error "Error when creating a text file"
-fi
+print_info "*********************** train data preparation ****************************"
+. ./generate_base_files.sh --lm $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $project_name $data_root
 
-print_info "wav.scp file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
-if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/wav.scp; then
-    ((nbr_warning++))
-    # print_warning "The file wav.scp already exit and the data it contains will be overwritten"
-fi 
-python generate_wav_scp_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/train $data_root
-status=$?
-if [ $status -eq 1 ]; then
-    ((nbr_error++))
-    print_error "Error when creating a wav.scp file"
-fi
+print_info "*********************** test data preparation ****************************"
+. ./generate_base_files.sh --test $project_name $data_root
 
-print_info "segments file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
-if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/segments; then
-    ((nbr_warning++))
-    # print_warning "The file segments already exit and the data it contains will be overwritten"
-fi 
-python generate_segment_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/wav.scp $KALDI_INSTALLATION_PATH/egs/$project_name/data/train
-
-status=$?
-if [ $status -eq 1 ]; then
-    ((nbr_error++))
-    print_error "Error when creating a segments file"
-fi
-
-
-print_info "utt2spk file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
-if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/utt2spk; then
-    ((nbr_warning++))
-    # print_warning "The file utt2spk already exit and the data it contains will be overwritten"
-fi 
-python generate_utterance_to_speaker_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/train/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/train
-
-status=$?
-if [ $status -eq 1 ]; then
-    ((nbr_error++))
-    print_error "Error when creating utt2spk file"
-fi
-
-current_script_path=$(pwd)
-
-cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
-print_info "The current directory is: $KALDI_INSTALLATION_PATH/egs/$project_name"
-print_info "spk2utt file generation in data/train"
-if  is_file_exist spk2utt; then
-    ((nbr_warning++))
-    # print_warning "The file spk2utt already exit and the data it contains will be overwritten"
-fi 
-
-utils/fix_data_dir.sh data/train
 
 cd "$current_script_path" || exit 1
 print_info "The current directory is: $current_script_path"

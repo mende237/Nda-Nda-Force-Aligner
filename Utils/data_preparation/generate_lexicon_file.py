@@ -1,6 +1,11 @@
 import sys
 import unicodedata
+import logging
 
+# Configure the logging module
+logging.basicConfig(filename='../../logs/error.log', level=logging.ERROR,
+                    format='%(asctime)s - %(levelname)s - %(filename)s - Line %(lineno)d - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 def merge_characters(characters:list[str], index:int) -> list[str]:
     result:list[str] = []
@@ -90,9 +95,10 @@ if len(sys.argv) != 3:
     print("Usage: python script.py <input_file_path> <output_folder_path>")
     sys.exit(1)
 else:
-    input_file = sys.argv[1]
-    output_folder = sys.argv[2]
     try:
+        input_file = sys.argv[1]
+        output_folder = sys.argv[2]
         generate_lexicon_file(input_file, output_folder)
-    except:
+    except Exception as error:
+        logging.error(str(error))
         sys.exit(1)

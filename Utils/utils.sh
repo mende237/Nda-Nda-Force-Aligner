@@ -83,6 +83,11 @@ project_setup_verification(){
         exit 1
     fi
 
+     if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/data/test"; then
+        print_error "The folder data/test not exit in $project_name. Please run the initialize.sh script to create projet"
+        exit 1
+    fi
+
     if ! is_folder_exist "$KALDI_INSTALLATION_PATH/egs/$project_name/data/lang"; then
         print_error "The folder data/lang not exit in $project_name. Please run the initialize.sh script to create projet"
         exit 1

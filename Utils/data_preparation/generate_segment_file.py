@@ -1,6 +1,12 @@
 import sys
 import re
 from pydub import AudioSegment
+import logging
+
+# Configure the logging module
+logging.basicConfig(filename='../../logs/error.log', level=logging.ERROR,
+                    format='%(asctime)s - %(levelname)s - %(filename)s - Line %(lineno)d - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 def is_audio_file(file_path):
     audio_extensions = [".mp3", ".wav", ".ogg"]
@@ -22,11 +28,7 @@ def generate_segment_file(input_file_path, output_file_path):
                     total_duration = total_duration / 1000  # Conversion en secondes
                     # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
                     output_file_stream.write(f"{file_id[:-2]} {file_id} 0.0 {total_duration}\n")
-    # audio = AudioSegment.from_file("/home/dimitri/Documents/memoire/splitedData/locuteur_1/loc_1_enonce_1/loc_1_enonce_1.wav")
-    # total_duration = len(audio)
-    # total_duration = total_duration / 1000  # Conversion en secondes
-    # output_file_stream.write(f"zez : {total_duration}\n")
-    # output_file_stream.close()
+
 
 
 # Check if the input and output file paths are provided
@@ -34,11 +36,10 @@ if len(sys.argv) != 3:
     print("Usage: python script.py <wav.scp_file_path> <output_folder_path>")
     sys.exit(1)
 else:
-    input_file_path = sys.argv[1]
-    output_file_path = f"{sys.argv[2]}/segments"
     try:
+        input_file_path = sys.argv[1]
+        output_file_path = f"{sys.argv[2]}"
         generate_segment_file(input_file_path, output_file_path)
-    except:
+    except Exception as error:
+        logging.error(str(error))
         sys.exit(1)
-
-# echo "segme

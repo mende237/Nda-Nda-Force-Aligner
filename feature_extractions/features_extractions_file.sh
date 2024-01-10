@@ -6,32 +6,51 @@ script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 cd "$script_path" || exit 1
 source ../Utils/utils.sh
 
-# Check the number of arguments
-if [ $# -ne 2 ] && [ $# -ne 3 ]; then
-    print_error "Please provide a project name."
-    print_info "Usage: $0 --pitch | --mfcc <project name> <nbr_job> (optional)"
-    exit 1
-fi
 
+pitch=false
+train=true
+nbr_job=1
 nbr_warning=0
 nbr_error=0
-project_name=$2
+data_folder=
 
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --test)
+            train=false
+            shift
+            ;;
+        --pitch)
+            pitch=true
+            shift
+            ;;
+        --nbr-job)
+            shift
+            nbr_job=$(string_to_int "$1")
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
 
-if [ "$1" != "--mfcc" ] && [ "$1" != "--pitch" ]; then
-    print_info "Usage: $0 --pitch | --mfcc <project name> <nbr_job> (optional)"
+# Check the number of arguments
+if [ $# -ne 1 ]; then
+    print_info "Usage: $0 [options] <project name>"
     exit 1
 fi
 
-feature_type=$1
-nbr_job=0
-
-
-if [ $# -eq 3 ]; then
-    nbr_job=$(string_to_int "$3")
-fi
+project_name=$1
 
 project_setup_verification $project_name
+
+
+if $train; then
+    data_folder=train
+else
+    data_folder=test
+fi
 
 cmd_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/cmd.sh"
 
@@ -48,20 +67,18 @@ else
 fi
 
 
-
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 print_info "Inside the directory $KALDI_INSTALLATION_PATH/egs/$project_name"
 
 
-nbr_job=$((nbr_job == 0 ? 1 : nbr_job))
-feature_folder=
-x=data/train 
-log_folder_name=
+feature_folder="features/$data_folder"
+x=data/$data_folder
+log_folder_name="features/$data_folder"
 pitch_conf_file_path=$KALDI_INSTALLATION_PATH/egs/$project_name/conf/pitch.conf
 mfcc_conf_file_path=$KALDI_INSTALLATION_PATH/egs/$project_name/conf/mfcc.conf
 if [ "$feature_type" == "--pitch" ]; then
-    feature_folder="mfcc_pitch"
-    log_folder_name="log_mfcc_pitch"
+    feature_folder="$feature_folder/mfcc_pitch"
+    log_folder_name="$feature_folder/log_mfcc_pitch"
     if is_folder_exist exp/$log_folder_name; then
         print_warning "Delete the contents of the exp/$log_folder_name folder"
         rm -rf the exp/$log_folder_name/*
@@ -90,8 +107,8 @@ else
         echo "--sample-frequency=44100" >> "$mfcc_conf_file_path"
         ((nbr_warning++))
     fi
-    feature_folder="mfcc"
-    log_folder_name="log_mfcc"
+    feature_folder="$feature_folder/mfcc"
+    log_folder_name="$log_folder_name/log_mfcc"
     if is_folder_exist exp/$log_folder_name; then
         print_warning "Delete the contents of the exp/$log_folder_name folder"
         rm -rf the exp/$log_folder_name/*
