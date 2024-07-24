@@ -112,7 +112,20 @@ if $add_question; then
     tone_questions="í é ɛ́ ə́ á ú ó ɔ́
 ə̀ à ò ɔ̀
 î ɛ̂ ə̂ ɔ̂
-ɔ̌"
+ɔ̌
+ɔ̀ ɔ́ ɔ̂ ɔ̌
+ó ò
+á à
+î í
+ɛ́ ɛ̂
+ə̂ ə́"
+
+#     tone_questions="ɔ̀ ɔ́ ɔ̂ ɔ̌
+# ó ò
+# á à
+# î í
+# ɛ́ ɛ̂
+# ə̂ ə́"
 
     print_info "extra_questions.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
     if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/extra_questions.txt; then

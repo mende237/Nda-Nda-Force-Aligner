@@ -39,8 +39,8 @@ def can_merge(previous_char:str, current_char:str) -> bool:
     if ((previous_char == 'g' and current_char == 'h') 
         or (previous_char == 's' and current_char == 'h')
         or (previous_char == 'n' and current_char == 'y') 
-        or (previous_char == 'z' and current_char == 'h') 
-        or current_char == '\''):
+        or (previous_char == 'z' and current_char == 'h')):
+        # or current_char == '\''):
         return True
     
     return False

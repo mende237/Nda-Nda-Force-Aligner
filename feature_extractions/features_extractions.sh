@@ -79,7 +79,7 @@ x=data/$data_folder
 log_folder_name="features/$data_folder"
 pitch_conf_file_path=$KALDI_INSTALLATION_PATH/egs/$project_name/conf/pitch.conf
 mfcc_conf_file_path=$KALDI_INSTALLATION_PATH/egs/$project_name/conf/mfcc.conf
-if [ "$feature_type" == "--pitch" ]; then
+if $pitch; then
     feature_folder="$feature_folder/mfcc_pitch"
     log_folder_name="$feature_folder/log_mfcc_pitch"
     if is_folder_exist exp/$log_folder_name; then
