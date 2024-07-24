@@ -8,12 +8,26 @@ cd "$script_path/bash_scripts" || exit 1
 source "$script_path/bash_scripts/delete_file.sh"
 cd "$script_path" || exit 1
 
+add_question=false
 
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --question)
+            add_question=true
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
 
 # Check the number of arguments
 if [ $# -ne 2 ]; then
     print_error "Please provide a project name and the data path folder root and number of speakers"
-    print_info "Usage: $0 <project name> <data path folder root>"
+    print_info "Usage: $0 [options] <project name> <data path folder root>"
+    print_info "--question if you want to add extract question"
     exit 1
 fi
 
@@ -69,7 +83,7 @@ output_model_dir=$lm_dir/arpa
 print_info "*********************** train data preparation ****************************"
 . ./generate_base_files.sh --lm $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $project_name $data_root
 
-print_info "*********************** test data preparation ****************************"
+print_info "*********************** test data preparation *****************************"
 . ./generate_base_files.sh --test $project_name $data_root
 
 
@@ -94,6 +108,22 @@ printf 'sil\nspn\n' > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lan
 print_info "optional_silence.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
 echo 'sil' > $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/optional_silence.txt
 
+
+if $add_question; then
+    tone_questions="í é ɛ́ ə́ á ú ó ɔ́
+ə̀ à ò ɔ̀
+î ɛ̂ ə̂ ɔ̂
+ɔ̌"
+
+    print_info "extra_questions.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
+    if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/extra_questions.txt; then
+        ((nbr_warning++))
+        print_warning "The file segments already exit and the data it contains will be overwritten"
+        echo "$tone_questions" > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/extra_questions.txt"
+    else
+        echo "$tone_questions" > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/extra_questions.txt"
+    fi 
+fi
 
 delete_in_lang_local_auto_generated_file "$project_name"
 

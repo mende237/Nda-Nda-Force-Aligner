@@ -63,7 +63,7 @@ fi
 print_info "text file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder"
 if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder; then
     ((nbr_warning++))
-    print_warning "The file text already exit and the data it contains will be overwritten"
+    print_warning "The file text already exist and the data it contains will be overwritten"
 fi 
 python generate_text_file.py $config $data_root $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder/text
 status=$?
@@ -75,7 +75,7 @@ fi
 print_info "wav.scp file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder"
 if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder/wav.scp; then
     ((nbr_warning++))
-    print_warning "The file wav.scp already exit and the data it contains will be overwritten"
+    print_warning "The file wav.scp already exist and the data it contains will be overwritten"
 fi 
 python generate_wav_scp_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder/wav.scp $data_root/$data_folder
 status=$?
@@ -87,7 +87,7 @@ fi
 print_info "segments file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder"
 if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder/segments; then
     ((nbr_warning++))
-    print_warning "The file segments already exit and the data it contains will be overwritten"
+    print_warning "The file segments already exist and the data it contains will be overwritten"
 fi 
 python generate_segment_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder/wav.scp $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder/segments
 
@@ -101,7 +101,7 @@ fi
 print_info "utt2spk file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder"
 if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder/utt2spk; then
     ((nbr_warning++))
-    print_warning "The file utt2spk already exit and the data it contains will be overwritten"
+    print_warning "The file utt2spk already exist and the data it contains will be overwritten"
 fi 
 python generate_utterance_to_speaker_file.py $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder/text $KALDI_INSTALLATION_PATH/egs/$project_name/data/$data_folder
 
@@ -118,7 +118,7 @@ print_info "The current directory is: $KALDI_INSTALLATION_PATH/egs/$project_name
 print_info "spk2utt file generation in data/$data_folder"
 if  is_file_exist spk2utt; then
     ((nbr_warning++))
-    print_warning "The file spk2utt already exit and the data it contains will be overwritten"
+    print_warning "The file spk2utt already exist and the data it contains will be overwritten"
 fi 
 
 utils/fix_data_dir.sh data/$data_folder
