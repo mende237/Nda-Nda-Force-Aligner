@@ -31,7 +31,7 @@ esac
 
 
 message="Usage:
-    \tmonophone_trainning.sh [--speakers|--shortest|--first|--last|--per-spk] <project name> <num-utt> <dest folder> <config file name>
+    \tmonophone_trainning.sh [--speakers|--shortest|--first|--last|--per-spk] <project name> <num-utt> <dest folder name> <config file name>
     \tmonophone_trainning.sh [--spk-list <speaker-list-file>] <project name>  <dest folder> <config file name>
     \tmonophone_trainning.sh [--utt-list <utt-list-file>] <project name> <dest folder> <config file name>
     \tBy default, randomly selects <num-utt> utterances from the data directory.
@@ -44,7 +44,6 @@ message="Usage:
     \tWith --utt-list, reads the utterances to keep from <utt-list-file>"
 
 if [ $# != $expect_args ]; then
-    print_error "During providing parameters"
     print_info "$message"
     exit 1;
 fi

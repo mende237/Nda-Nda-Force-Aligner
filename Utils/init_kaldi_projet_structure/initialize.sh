@@ -10,7 +10,6 @@ source ../utils.sh
 
 # Check the number of arguments
 if [ $# -ne 1 ]; then
-    print_error "Please provide a project name."
     print_info "Usage: ./$0 <project name>"
     exit 1
 fi

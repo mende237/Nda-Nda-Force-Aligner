@@ -13,7 +13,6 @@ nbr_error=0
 
 # Check the number of arguments
 if [ $# -ne 4 ] && [ $# -ne 5 ]; then
-    print_error "During providing parameters"
     print_info "Usage: $0 [option] <project name> <model folder name> <output alignment folder name> <configuration file name>"    
     exit 1
 fi

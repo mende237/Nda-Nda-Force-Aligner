@@ -38,6 +38,9 @@ done
 # Check the number of arguments
 if [ $# -ne 1 ]; then
     print_info "Usage: $0 [options] <project name>"
+    print_info "--test if you want to extract features for testing data"
+    print_info "--pitch if you want to extract pitch features"
+    print_info "--nbr-job is the number of job you want for feature extractions"
     exit 1
 fi
 

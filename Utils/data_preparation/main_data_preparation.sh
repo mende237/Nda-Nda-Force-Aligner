@@ -25,7 +25,6 @@ done
 
 # Check the number of arguments
 if [ $# -ne 2 ]; then
-    print_error "Please provide a project name and the data path folder root and number of speakers"
     print_info "Usage: $0 [options] <project name> <data path folder root>"
     print_info "--question if you want to add extract question"
     exit 1

@@ -28,7 +28,6 @@ case $1 in
 esac
 
 if $error; then
-    print_error "During providing parameters"
     print_info "Usage: $0 [option] <project name> <nbr leaves> <nbr gaussian> <align folder> <dest folder> <config file name>"    
     print_info "[option] = --delta | --lda | --sat"
     exit 1

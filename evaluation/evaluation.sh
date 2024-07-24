@@ -71,6 +71,9 @@ if [[ $decode_extra_opts ]]; then
     config_options="$config_options --decode-extra-opts $decode_extra_opts"
 fi
 
+
+
+
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1;
 print_info "Inside the directory $(pwd)"
 steps/decode.sh $config_options --model exp/$model_folder_name/final.mdl exp/$model_folder_name/graph data/$data_folder_name exp/$model_folder_name/$decode_folder_name
