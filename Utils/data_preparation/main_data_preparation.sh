@@ -127,6 +127,11 @@ á à
 # ɛ́ ɛ̂
 # ə̂ ə́"
 
+#     tone_questions="í é ɛ́ ə́ á ú ó ɔ́
+# ə̀ à ò ɔ̀
+# î ɛ̂ ə̂ ɔ̂
+# ɔ̌"
+
     print_info "extra_questions.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
     if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/extra_questions.txt; then
         ((nbr_warning++))
