@@ -23,9 +23,13 @@ if ! is_file_exist $lexicon_file; then
     exit 1
 fi
 
-python triphone_count.py $lexicon_file $data_folder_root/utterance.txt
 
-# python word_count_occurence.py $data_folder_root/utterance.txt
+cd phone_statistics || exit 1
+
+python triphone_count.py $lexicon_file $data_folder_root/utterance.txt triphone_count.csv triphone_graph.png
+python monophone_count.py $lexicon_file $data_folder_root/utterance.txt monophone_count.csv monophone_graph.png
+
+cd "$script_path" || exit 1
 
 
 cd $calling_script_path || exit 1
