@@ -109,23 +109,15 @@ echo 'sil' > $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/optional
 
 
 if $add_question; then
-    # tone_questions="í é ɛ́ ə́ á ú ó ɔ́ '"
-
-    tone_questions="ɔ̀ ɔ́ ɔ̂ ɔ̌
-í é ɛ́ ə́ á ú ó ɔ́
-ó ò
+# m n ŋ nasales
+# f s z fritives
+    tone_questions="ə́ í á 
+ɛ̀ ɔ̀
+ɔ̀ ɔ̌
 á à
-î í
-ɛ́ ɛ̂
-ə̂ ə́"
-
-#     tone_questions="í é ɛ́ ə́ á ú ó ɔ́
-# ə̀ à ò ɔ̀
-# î ɛ̂ ə̂ ɔ̂
-# ɔ̌"
-
-#     tone_questions="ə́ í á 
-# ɛ̀ ɔ̀"
+ə̂ ə́
+m n ŋ
+f s z"
 
     print_info "extra_questions.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
     if  is_file_exist $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/extra_questions.txt; then

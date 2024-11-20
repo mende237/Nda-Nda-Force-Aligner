@@ -162,7 +162,7 @@ fi
 
 
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
-steps/nnet2/train_tanh.sh  --initial-learning-rate 0.015 --final-learning-rate 0.002 --num-hidden-layers 1  --num-jobs-nnet "$nbr_job_trainning" data/train data/lang exp/$triphone_delta_model_folder_name exp/tri4_nnet
+steps/nnet2/train_tanh.sh  --initial-learning-rate 0.015 --final-learning-rate 0.002 --num-hidden-layers 1  --num-jobs-nnet "$nbr_job_trainning" data/train data/lang exp/$triphone_delta_delta_model_folder_name exp/tri4_nnet
 
 
 steps/nnet2/decode.sh --nj 2 exp/$triphone_delta_model_folder_name/graph data/test exp/tri4_nnet/decode | tee exp/tri4_nnet/decode/decode.log
