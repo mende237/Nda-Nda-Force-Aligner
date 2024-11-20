@@ -34,7 +34,8 @@ if [ $# -ne 6 ]; then
     exit 1
 fi
 
-
+nbr_warning=0
+nbr_error=0
 project_name=$1
 
 project_setup_verification $project_name
@@ -73,8 +74,8 @@ if [ $# -eq 7 ]; then
     conf_option="--config conf/$conf_file_name"
 fi
 
-echo "nbr leaves $nbr_leaves"
-echo "nbr gauss $nbr_gauss"
+# echo "nbr leaves $nbr_leaves"
+# echo "nbr gauss $nbr_gauss"
 
 if [ $nbr_leaves -ge $nbr_gauss ]; then
     print_error "The number of leaves must be less than the number of gaussian"
@@ -116,5 +117,8 @@ if [ $status -eq 1 ]; then
     ((nbr_error++))
     exit 1
 fi
+
+print_info "End of triphone trainning. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
+
 
 cd "$calling_script_path" || exit 1

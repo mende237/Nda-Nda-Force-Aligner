@@ -19,65 +19,51 @@ model=""
 graph="graph"
 
 
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --remove-oov)
+            remove_oov=true
+            shift
+            ;;
+        --transition-scale)
+            shift
+            if [[ $# -gt 0 ]]; then
+                transition_scale=$1
+                shift
+            else
+                print_error "Missing value for --transition-scale option"
+                exit 1
+            fi
+            ;;
+        --self-loop-scale)
+            shift
+            if [[ $# -gt 0 ]]; then
+                self_loop_scale=$1
+                shift
+            else
+                print_error "Missing value for --self-loop-scale option"
+                exit 1
+            fi
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
 
-# Function to display script usage
-function display_usage() {
+
+if [[ $# -ne 2 ]]; then
     print_info "Usage: $0 [options] <project-name> <model-folder-name>"
     print_info "Options:"
     print_info "  --remove-oov          Remove OOV (Out-of-Vocabulary) words"
     print_info "  --transition-scale    Transition scale value"
     print_info "  --self-loop-scale     Self loop scale value"
-}
+    exit 1
+fi
 
+project_name=$1
+model=$2
 
-function handle_options() {
-    while [[ $# -gt 0 ]]; do
-        case $1 in
-            --remove-oov)
-                remove_oov=true
-                shift
-                ;;
-            --transition-scale)
-                shift
-                if [[ $# -gt 0 ]]; then
-                    transition_scale=$1
-                    shift
-                else
-                    print_error "Missing value for --transition-scale option"
-                    exit 1
-                fi
-                ;;
-            --self-loop-scale)
-                shift
-                if [[ $# -gt 0 ]]; then
-                    self_loop_scale=$1
-                    shift
-                else
-                    print_error "Missing value for --self-loop-scale option"
-                    exit 1
-                fi
-                ;;
-            *)
-                break
-                ;;
-        esac
-    done
-}
-
-
-function handle_arguments() {
-    if [[ $# -ne 2 ]]; then
-        print_error "Invalid number of arguments"
-        display_usage "$0"
-        exit 1
-    fi
-
-    project_name=$1
-    model=$2
-}
-
-handle_options "$@"
-handle_arguments "$@"
 
 project_setup_verification $project_name
 

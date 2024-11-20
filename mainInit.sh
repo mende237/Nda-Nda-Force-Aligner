@@ -7,10 +7,8 @@ source "Utils/utils.sh"
 
 
 data_root="/home/dimitri/Documents/memoire/data/mono"
-# project_name="test_MFCC_1_2"
-# project_name="test_MFCC_pitch_1_2"
-project_name="test_MFCC_pitch_tone_1_2"
-add_question=true
+project_name="test_1_2_8"
+add_question=false
 add_pitch_feature=true
 nbr_job_feature_extraction=8
 nbr_job_trainning=4
@@ -91,33 +89,33 @@ fi
 nbr_leaves=4
 nbr_gauss=194
 
-
 print_info "******************************************* Triphone delta Alignement *******************************************"
 ./training/acoustic_model/align.sh $project_name $triphone_delta_model_folder_name $triphone_delta_align_folder $align_conf_file_name
 
-
-print_info "******************************************* Triphone delta-delta Training *******************************************"
+print_info "******************************************* Triphone delta delta Training *******************************************"
 ./training/acoustic_model/triphone_training.sh $project_name $nbr_leaves $nbr_gauss $triphone_delta_align_folder $triphone_delta_delta_model_folder_name $train_tri_conf_file_name
 
 
 if [[ $trainning_type -ge 3 ]]; then
     print_info "******************************************** Graph construction ********************************************"
     ./evaluation/make_graph.sh $project_name $triphone_delta_delta_model_folder_name
-    print_info "******************************************* Triphone delta evaluation *******************************************"
+    print_info "******************************************* Triphone delta delta evaluation *******************************************"
     ./evaluation/evaluation.sh $project_name $test_data_folder_name $triphone_delta_delta_model_folder_name $decode_folder_name
     if [[ $trainning_type -eq 3 ]]; then
         exit 1
     fi
 fi
 
-
 nbr_leaves=4
-nbr_gauss=194
+nbr_gauss=190
 
-print_info "******************************************* Triphone delta-delta Alignement *******************************************"
-./training/acoustic_model/align.sh $project_name $triphone_delta_delta_model_folder_name $triphone_delta_delta_align_folder $align_conf_file_name
+print_info "******************************************* Triphone delta delta Alignement *******************************************"
+./training/acoustic_model/align.sh --use-graphs true $project_name $triphone_delta_delta_model_folder_name $triphone_delta_delta_align_folder $align_conf_file_name
 
-
+status=$?
+if [ $status -eq 1 ]; then
+    exit 1
+fi
 
 print_info "******************************************* Triphone LDA-MLLT Training *******************************************"
 ./training/acoustic_model/triphone_training.sh --lda $project_name $nbr_leaves $nbr_gauss $triphone_delta_delta_align_folder $triphone_lda_mllt_model_folder_name $train_tri_conf_file_name
@@ -158,13 +156,5 @@ if [[ $trainning_type -ge 5 ]]; then
         exit 1
     fi
 fi
-
-
-
-cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
-steps/nnet2/train_tanh.sh  --initial-learning-rate 0.015 --final-learning-rate 0.002 --num-hidden-layers 1  --num-jobs-nnet "$nbr_job_trainning" data/train data/lang exp/$triphone_delta_model_folder_name exp/tri4_nnet
-
-
-steps/nnet2/decode.sh --nj 2 exp/$triphone_delta_model_folder_name/graph data/test exp/tri4_nnet/decode | tee exp/tri4_nnet/decode/decode.log
 
 cd "$calling_script_path" || exit 1

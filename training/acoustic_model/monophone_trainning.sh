@@ -48,6 +48,8 @@ if [ $# != $expect_args ]; then
     exit 1;
 fi
 
+nbr_job=2
+
 project_name=$1
 project_setup_verification $project_name
 
@@ -122,9 +124,9 @@ fi
 if ! is_file_exist conf/$config_file_name; then
     print_warning "The config trainning file doesn't exist inside conf folder. The default configurations will be applied"
     ((nbr_warning++))
-    steps/train_mono.sh --cmd "$train_cmd" data/$dest_folder data/lang exp/$dest_folder
+    steps/train_mono.sh --nj "$nbr_job" --cmd "$train_cmd" data/$dest_folder data/lang exp/$dest_folder
 else
-    steps/train_mono.sh --config conf/$config_file_name --cmd "$train_cmd" data/$dest_folder data/lang exp/$dest_folder
+    steps/train_mono.sh --nj "$nbr_job" --config conf/$config_file_name --cmd "$train_cmd" data/$dest_folder data/lang exp/$dest_folder
 fi
 
 

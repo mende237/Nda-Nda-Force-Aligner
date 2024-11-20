@@ -77,8 +77,8 @@ print_info "Inside the directory $KALDI_INSTALLATION_PATH/egs/$project_name"
 feature_folder="features/$data_folder"
 x=data/$data_folder
 log_folder_name="features/$data_folder"
-pitch_conf_file_path=$KALDI_INSTALLATION_PATH/egs/$project_name/conf/pitch.conf
-mfcc_conf_file_path=$KALDI_INSTALLATION_PATH/egs/$project_name/conf/mfcc.conf
+pitch_conf_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/conf/pitch.conf"
+mfcc_conf_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/conf/mfcc.conf"
 if $pitch; then
     feature_folder="$feature_folder/mfcc_pitch"
     log_folder_name="$feature_folder/log_mfcc_pitch"
@@ -98,18 +98,37 @@ if $pitch; then
         print_warning "File doesn't exist : $pitch_conf_file_path"
         print_info "Creating and configuring the pitch.conf file in the $KALDI_INSTALLATION_PATH/egs/$project_name/conf directory"
         echo "--sample-frequency=44100" >> "$pitch_conf_file_path"
+
+        echo "--frame-length=25.0" >> "$pitch_conf_file_path"
+        echo "--frame-shift=10.0" >> "$pitch_conf_file_path"
+        echo "--snip-edges=true" >> "$pitch_conf_file_path"
+        echo "--min-f0=50" >> "$pitch_conf_file_path"
+        echo "--max-f0=400" >> "$pitch_conf_file_path"
+        echo "--soft-min-f0=10.0" >> "$pitch_conf_file_path"
+        echo "--penalty-factor=0.1" >> "$pitch_conf_file_path"
+        echo "--delta-pitch=0.005" >> "$pitch_conf_file_path"
         ((nbr_warning++))
     fi
 
-    steps/make_mfcc_pitch.sh --cmd "$train_cmd" --nj "$nbr_job" $x exp/$log_folder_name/$x $feature_folder
-else
     if ! is_file_exist $mfcc_conf_file_path; then
         print_warning "File doesn't exist : $mfcc_conf_file_path"
         print_info "Creating and configuring the mfcc.conf file in the $KALDI_INSTALLATION_PATH/egs/$project_name/conf directory "
-        echo "--use-energy=false" > "$mfcc_conf_file_path"
+        echo "--use-energy=false" >> "$mfcc_conf_file_path"
         echo "--sample-frequency=44100" >> "$mfcc_conf_file_path"
+
+        echo "--frame-length=25.0" >> "$mfcc_conf_file_path"
+        echo "--frame-shift=10.0" >> "$mfcc_conf_file_path"
+        echo "--num-mel-bins=23" >> "$mfcc_conf_file_path"
+        echo "--num-ceps=10" >> "$mfcc_conf_file_path"
+        echo "--low-freq=20" >> "$mfcc_conf_file_path"
+        echo "--high-freq=-400" >> "$mfcc_conf_file_path"
+
         ((nbr_warning++))
     fi
+    print_info "Extraction of MFCC pitch characteristics"
+    steps/make_mfcc_pitch.sh --cmd "$train_cmd" --nj "$nbr_job" $x exp/$log_folder_name/$x $feature_folder
+else
+    
     feature_folder="$feature_folder/mfcc"
     log_folder_name="$log_folder_name/log_mfcc"
     if is_folder_exist exp/$log_folder_name; then
@@ -124,7 +143,15 @@ else
         ((nbr_warning++))
     fi
 
-    print_info "Extraction of MFCC characteristics with job number equal to $nbr_job the result will be stored in the $mfccdir directory"
+    if ! is_file_exist $mfcc_conf_file_path; then
+        print_warning "File doesn't exist : $mfcc_conf_file_path"
+        print_info "Creating and configuring the mfcc.conf file in the $KALDI_INSTALLATION_PATH/egs/$project_name/conf directory "
+        echo "--use-energy=false" > "$mfcc_conf_file_path"
+        echo "--sample-frequency=44100" >> "$mfcc_conf_file_path"
+        ((nbr_warning++))
+    fi
+    # print_info "Extraction of MFCC characteristics with job number equal to $nbr_job the result will be stored in the $mfccdir directory"
+    print_info "Extraction of MFCC characteristics"
     steps/make_mfcc.sh --cmd "$train_cmd" --nj "$nbr_job" $x exp/$log_folder_name/$x $feature_folder  
 fi
 

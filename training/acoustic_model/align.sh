@@ -6,39 +6,42 @@ script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 cd "$script_path" || exit 1
 source ../../Utils/utils.sh
 
+options=
+sat_align=false
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --sat)
+            sat_align=true
+            shift
+            ;;
+        --use-graphs)
+            options=$1 $2
+            shift
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
 
 nbr_warning=0
 nbr_error=0
 
 
 # Check the number of arguments
-if [ $# -ne 4 ] && [ $# -ne 5 ]; then
+if [ $# -ne 4 ]; then
     print_info "Usage: $0 [option] <project name> <model folder name> <output alignment folder name> <configuration file name>"    
     exit 1
 fi
 
-model_folder_name=
-output_alignment_folder_name=
-configuration_file_name=
-align_option=
-project_name=
 
-if [ $# -eq 5 ]; then
-    align_option=$1
-    if $align_option == "--sat"; then
-        print_error "$align_option invalid option"
-        exit 1
-    fi
-    project_name=$2
-    model_folder_name=$3
-    output_alignment_folder_name=$4
-    configuration_file_name=$5
-else
-    project_name=$1
-    model_folder_name=$2
-    output_alignment_folder_name=$3
-    configuration_file_name=$4
-fi
+project_name=$1
+model_folder_name=$2
+output_alignment_folder_name=$3
+configuration_file_name=$4
+
 
 
 project_setup_verification $project_name
@@ -84,10 +87,10 @@ if is_folder_exist exp/$output_alignment_folder_name; then
     rm -rf exp/$output_alignment_folder_name/*
 fi
 
-if [[ $align_option ]]; then
+if $sat_align; then
     steps/align_fmllr.sh $config_option --cmd "$train_cmd" data/train data/lang exp/$model_folder_name exp/$output_alignment_folder_name
 else
-    steps/align_si.sh $config_option --cmd "$train_cmd" data/train data/lang exp/$model_folder_name exp/$output_alignment_folder_name
+    steps/align_si.sh $options $config_option --cmd "$train_cmd" data/train data/lang exp/$model_folder_name exp/$output_alignment_folder_name
 fi
 
 status=$?
@@ -97,6 +100,6 @@ if [ $status -eq 1 ]; then
     exit 1
 fi
 
-
+print_info "End of alignment. \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
 
 cd "$calling_script_path" || exit 1

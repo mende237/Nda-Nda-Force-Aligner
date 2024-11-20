@@ -63,8 +63,13 @@ def triphone_count(project_name, data_folder_root):
                 triphone_count_result[triphone] = triphone_count_result[triphone] + count
             except KeyError:
                 triphone_count_result[triphone] = count
+                
     
-    return triphone_count_result
+    counts = list(triphone_count_result.values())
+    mean_count = np.mean(counts)
+    median_count = np.median(counts)
+    
+    return triphone_count_result, mean_count, median_count
 
     
 def main():
@@ -76,11 +81,12 @@ def main():
 
     args = parser.parse_args()
 
-    triphone_count_result = triphone_count(args.lexicon_file_path, args.utterance_file_path)
+    triphone_count_result, mean_count, median_count = triphone_count(args.lexicon_file_path, args.utterance_file_path)
     
     save_to_csv(triphone_count_result, args.output_csv_file)
     draw_graph(triphone_count_result, args.output_image_file, top_n=40)
     
+    print(f"mean count: {mean_count}\nmedian count: {median_count}")  
     # for triphone, count in triphone_count_result.items():
     #     print(f"{triphone} - {count}")
 
