@@ -112,6 +112,7 @@ if $add_question; then
     # tone_questions="í é ɛ́ ə́ á ú ó ɔ́ '"
 
     tone_questions="ɔ̀ ɔ́ ɔ̂ ɔ̌
+í é ɛ́ ə́ á ú ó ɔ́
 ó ò
 á à
 î í

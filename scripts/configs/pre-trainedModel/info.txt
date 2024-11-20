@@ -1,6 +1,0 @@
-number of phones 198
-number of pdfs 151
-number of transition-ids 1308
-number of transition-states 614
-feature dimension 39
-number of gaussians 175
