@@ -111,11 +111,19 @@ echo 'sil' > $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/optional
 if $add_question; then
 # m n ŋ nasales
 # f s z fritives
-    tone_questions="ə́ í á 
-ɛ̀ ɔ̀
-ɔ̀ ɔ̌
-á à
-ə̂ ə́
+    tone_questions="í é ɛ́ ə́ á ú ó ɔ́ ɨ́
+ə̀ à ò ɔ̀ ɛ̀
+î ɛ̂ ə̂ ɔ̂ â 
+ɔ̌ ǔ
+í î
+é
+ɛ́ ɛ̂ ɛ̀ 
+ə́ ə̂ ə̀
+á â à
+ú ǔ
+ó ò
+ɔ́ ɔ̌ ɔ̀
+ɨ́   
 m n ŋ
 f s z"
 

@@ -8,9 +8,9 @@ source "Utils/utils.sh"
 
 data_root="/home/dimitri/Documents/memoire/data/mono"
 # project_name="test_MFCC_1_2"
-# project_name="test_MFCC_pitch_1_2"
-project_name="test_MFCC_pitch_tone_1_2"
-add_question=true
+project_name="test_MFCC_pitch_1_2"
+# project_name="test_MFCC_pitch_tone_1_2"
+add_question=false
 add_pitch_feature=true
 nbr_job_feature_extraction=8
 nbr_job_trainning=4
@@ -88,8 +88,8 @@ if [[ $trainning_type -ge 2 ]]; then
     fi
 fi
 
-nbr_leaves=4
-nbr_gauss=194
+# nbr_leaves=10
+# nbr_gauss=194
 
 
 print_info "******************************************* Triphone delta Alignement *******************************************"
@@ -103,7 +103,7 @@ print_info "******************************************* Triphone delta-delta Tra
 if [[ $trainning_type -ge 3 ]]; then
     print_info "******************************************** Graph construction ********************************************"
     ./evaluation/make_graph.sh $project_name $triphone_delta_delta_model_folder_name
-    print_info "******************************************* Triphone delta evaluation *******************************************"
+    print_info "******************************************* Triphone delta-delta evaluation *******************************************"
     ./evaluation/evaluation.sh $project_name $test_data_folder_name $triphone_delta_delta_model_folder_name $decode_folder_name
     if [[ $trainning_type -eq 3 ]]; then
         exit 1
@@ -111,8 +111,8 @@ if [[ $trainning_type -ge 3 ]]; then
 fi
 
 
-nbr_leaves=4
-nbr_gauss=194
+# nbr_leaves=6
+# nbr_gauss=194
 
 print_info "******************************************* Triphone delta-delta Alignement *******************************************"
 ./training/acoustic_model/align.sh $project_name $triphone_delta_delta_model_folder_name $triphone_delta_delta_align_folder $align_conf_file_name
@@ -141,8 +141,8 @@ print_info "******************************************* Triphone LDA-MLLT Aligne
 ./training/acoustic_model/align.sh $project_name $triphone_lda_mllt_model_folder_name $triphone_lda_mllt_align_folder $align_conf_file_name
 
 
-nbr_leaves=4
-nbr_gauss=190
+# nbr_leaves=10
+# nbr_gauss=190
 
 
 print_info "******************************************* Triphone SAT Training *******************************************"
