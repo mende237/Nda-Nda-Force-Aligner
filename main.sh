@@ -8,9 +8,9 @@ source "Utils/utils.sh"
 
 data_root="/home/dimitri/Documents/memoire/data/mono"
 # project_name="test_MFCC_1_2"
-project_name="test_MFCC_pitch_1_2"
-# project_name="test_MFCC_pitch_tone_1_2"
-add_question=false
+# project_name="test_MFCC_pitch_1_2"
+project_name="test_MFCC_pitch_tone_1_2"
+add_question=true
 add_pitch_feature=true
 nbr_job_feature_extraction=8
 nbr_job_trainning=4
@@ -28,7 +28,7 @@ train_tri_conf_file_name="train_tri.conf"
 align_conf_file_name="align.conf"
 decode_folder_name="decode"
 test_data_folder_name="test"
-nbr_leaves=4
+nbr_leaves=10
 nbr_gauss=190
 
 
@@ -88,7 +88,7 @@ if [[ $trainning_type -ge 2 ]]; then
     fi
 fi
 
-# nbr_leaves=10
+# nbr_leaves=4
 # nbr_gauss=194
 
 
@@ -111,7 +111,7 @@ if [[ $trainning_type -ge 3 ]]; then
 fi
 
 
-# nbr_leaves=6
+# nbr_leaves=4
 # nbr_gauss=194
 
 print_info "******************************************* Triphone delta-delta Alignement *******************************************"
@@ -141,7 +141,7 @@ print_info "******************************************* Triphone LDA-MLLT Aligne
 ./training/acoustic_model/align.sh $project_name $triphone_lda_mllt_model_folder_name $triphone_lda_mllt_align_folder $align_conf_file_name
 
 
-# nbr_leaves=10
+# nbr_leaves=4
 # nbr_gauss=190
 
 
