@@ -43,7 +43,7 @@ def draw_graph(triphone_count_result, output_image_file, top_n=40):
     plt.axhline(y=median_count, color='g', linestyle='--', label=f'Médiane: {median_count:.2f}')
     plt.xlabel('Triphones')
     plt.ylabel('Fréquence')
-    plt.title(f"Distribution des {top_n} triphones les plus fréquents.")
+    # plt.title(f"Distribution des {top_n} triphones les plus fréquents.")
     plt.xticks(rotation=90)
     plt.legend()
     plt.tight_layout()
@@ -86,6 +86,7 @@ def main():
     save_to_csv(triphone_count_result, args.output_csv_file)
     draw_graph(triphone_count_result, args.output_image_file, top_n=40)
     
+    print("Triphone statistics")
     print(f"mean count: {mean_count}\nmedian count: {median_count}")  
     # for triphone, count in triphone_count_result.items():
     #     print(f"{triphone} - {count}")

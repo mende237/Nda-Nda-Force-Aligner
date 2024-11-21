@@ -27,7 +27,7 @@ fi
 cd phone_statistics || exit 1
 
 python triphone_count.py $lexicon_file $data_folder_root/utterance.txt triphone_count.csv triphone_graph.png
-python monophone_count.py $lexicon_file $data_folder_root/utterance.txt monophone_count.csv monophone_graph.png
+python monophone_count.py $lexicon_file $data_folder_root/utterance.txt monophone_count.csv monophone_graph.png tone_count.csv tone_graph.png
 
 cd "$script_path" || exit 1
 
