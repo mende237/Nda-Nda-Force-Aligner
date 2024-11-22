@@ -9,7 +9,8 @@ This project provides scripts for training and evaluating acoustic models using 
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
-- [Nda' Nda'](#ndanda)
+- [Nda' Nda'](#nda-nda)
+- [Experiments](#experiments)
 - [Scripts Overview](#scripts-overview)
 <!-- - [Configuration](#Configuration) -->
 - [Contributing](#contributing)
@@ -108,8 +109,9 @@ echo 'export KALDI_INSTALLATION_PATH="/home/dimitri/kaldi"' >> ~/.bashrc
     ```sh
     ./initialize.sh <project_name>
     ```
-
-![Kaldi Folder Structure](https://www.researchgate.net/publication/344438159/figure/fig24/AS:962084204474369@1606390157352/Figure-E1-summarizes-the-standard-files-and-directories-of-a-custom-Kaldi-project.png)
+    <p align="center">
+        <img src="readme_ressources/kaldi_folder_structure.png" alt="Kaldi Folder Structure" width="800px">
+    </p>
 
 3. Configure the `main.sh` script with your project-specific settings. For the beginning, you must only configure the project folder path and data root folder path. Inside this file, there is one variable named `project_name`. Set this variable with your `<project_name>`. Check also the variable named `data_root` and set it to the data root you downloaded using this [link](https://drive.google.com/drive/folders/1tY8o_-wLLheOs6_wHTcrOhRNXHpD0dI0?usp=drive_link). Example:
 
@@ -136,12 +138,46 @@ The training results will be stored respectively in the following files:
 - `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/train_tri_sat_50_per_spk/decode/scoring_kaldi/best_wer`
 - `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/tri4_nnet/decode/scoring_kaldi/best_wer`
 
-## Ndanda
-hello
-
-
-
 The evaluation metric is WER (Word Error Rate).
+# Nda' Nda'
+The **Nda' Nda'** language is spoken in the Western region of Cameroon, spread across four departments: Ndé, with the villages of Bangoua, Bamena, Balengou, Bazou, and Batchingou; Hauts-Plateaux, with the villages of Bangou, Batoufam, and Bandrefam; Koung-Khi, with the villages of Bangang-Fongang and Bangang-Fondji; and Haut-Nkam, with the village of Batcha. In 1990, the number of speakers was estimated to be 10,000 [source](https://fr.wikipedia.org/wiki/Nda'nda'). It is a tonal language composed of four tones: **"high" (ˊ), "low" (ˋ), "low-high" (ˇ), and "high-low" (ˆ)**. For example, kwé translates to "eaten," mbɛ̀ translates to "meat," and kúndyə̂ translates to "bed."
+
+<p align="center">
+    <img src="readme_ressources/repartition.png" alt="Repartition of Nda' Nda' Language" width="500px" height="400px">
+</p>
+
+
+## Experiments
+
+### Feature Extractions
+
+In speech processing, the choice of features is crucial for the performance of speech recognition systems. While several features can be considered, there are reasons for favoring certain features over others, such as MFCCs, pitch, and delta and delta-delta parameters with CMVN applied. CMVN, a combination of CMN and CVN, normalizes recording environment variations like volume and noise changes, enhancing the robustness of speech recognition models.
+
+- **MFCC**: These coefficients are widely used in speech processing due to their ability to compactly represent spectral information and simulate human sound perception. They effectively capture timbre and tone variations, making them suitable for ASR systems.
+- **Pitch**: As shown by Ghahremani et al. (2014), pitch features can be useful for ASR systems, especially for tonal languages like Vietnamese and Cantonese. Ignoring this feature could result in the loss of crucial information, particularly in linguistic contexts where tone changes word meanings.
+- **Delta and Delta-Delta**: In addition to spectral coefficients, first-order (delta) and second-order (delta-delta) regression coefficients are added to heuristically compensate for the conditional independence assumption made by HMM-based acoustic models. If the original feature vector (static) is \( y_t^s \), the delta parameter, \( \Delta y_t^s \), is given by:
+
+    \[
+    \Delta y_t^s = \frac{\sum_{i=1}^n w_i(y_{t+i}^s - y_{t-i}^s)}{2\sum_{i=1}^n w_i^2}
+    \]
+
+The dimension of the acoustic coefficient vector extracted from recording frames is 13. When combining MFCCs with pitch features, the number of MFCC coefficients was reduced to 10 to maintain a dimension of 13 with the addition of three pitch-related coefficients. This dimension was empirically determined during experiments, as performance was poor beyond 13. With the addition of delta and delta-delta derived coefficients, the vector dimension increases from 13 to 40.
+
+## Phone statistics
+
+<p align="center">
+    <img src="readme_ressources/monophone_graph.png" alt="Monophone repartition" width="800px" height="400px">
+</p>
+
+
+<p align="center">
+    <img src="readme_ressources/triphone_graph.png" alt="triphone repartition" width="800px" height="400px">
+</p>
+
+<p align="center">
+    <img src="readme_ressources/tone_graph.png" alt="Tone repartition" width="800px" height="400px">
+</p>
+
 ## Scripts Overview
 
 ### `main.sh`

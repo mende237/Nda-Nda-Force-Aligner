@@ -43,7 +43,7 @@ def draw_tone_graph(tone_count_result, output_image_file):
     plt.bar(tones, counts, color='#1f77b4')
     plt.xlabel('Tons')
     plt.ylabel('Fréquence')
-    plt.title('Répartition de la fréquence de chaque tonalité')
+    # plt.title('Répartition de la fréquence de chaque tonalité')
     plt.xticks(rotation=360)
     plt.tight_layout()
     plt.savefig(output_image_file)
