@@ -110,7 +110,6 @@ echo 'export KALDI_INSTALLATION_PATH="/home/dimitri/kaldi"' >> ~/.bashrc
     ```
 
 ![Kaldi Folder Structure](https://www.researchgate.net/publication/344438159/figure/fig24/AS:962084204474369@1606390157352/Figure-E1-summarizes-the-standard-files-and-directories-of-a-custom-Kaldi-project.png)
-</p>
 
 3. Configure the `main.sh` script with your project-specific settings. For the beginning, you must only configure the project folder path and data root folder path. Inside this file, there is one variable named `project_name`. Set this variable with your `<project_name>`. Check also the variable named `data_root` and set it to the data root you downloaded using this [link](https://drive.google.com/drive/folders/1tY8o_-wLLheOs6_wHTcrOhRNXHpD0dI0?usp=drive_link). Example:
 
@@ -136,6 +135,11 @@ The training results will be stored respectively in the following files:
 - `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/train_tri_delta_delta_50_per_spk/decode/scoring_kaldi/best_wer`
 - `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/train_tri_sat_50_per_spk/decode/scoring_kaldi/best_wer`
 - `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/tri4_nnet/decode/scoring_kaldi/best_wer`
+
+## Ndanda
+hello
+
+
 
 The evaluation metric is WER (Word Error Rate).
 ## Scripts Overview
