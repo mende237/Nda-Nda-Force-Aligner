@@ -140,7 +140,7 @@ The training results will be stored respectively in the following files:
 - `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/tri4_nnet/decode/scoring_kaldi/best_wer`
 
 The evaluation metric is WER (Word Error Rate).
-# Nda' Nda'
+## Nda' Nda'
 The **Nda' Nda'** language is spoken in the Western region of Cameroon, spread across four departments: Ndé, with the villages of Bangoua, Bamena, Balengou, Bazou, and Batchingou; Hauts-Plateaux, with the villages of Bangou, Batoufam, and Bandrefam; Koung-Khi, with the villages of Bangang-Fongang and Bangang-Fondji; and Haut-Nkam, with the village of Batcha. In 1990, the number of speakers was estimated to be 10,000 [source](https://fr.wikipedia.org/wiki/Nda'nda'). It is a tonal language composed of four tones: **"high" (ˊ), "low" (ˋ), "low-high" (ˇ), and "high-low" (ˆ)**. For example, kwé translates to "eaten," mbɛ̀ translates to "meat," and kúndyə̂ translates to "bed."
 
 <p align="center">
