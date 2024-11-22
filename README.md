@@ -13,7 +13,7 @@ This project provides scripts for training and evaluating acoustic models using 
 - [Experiments](#experiments)
 - [Scripts Overview](#scripts-overview)
 - [Training Configuration](#Configuration)
-- [Keys references](#keys-references)
+- [Key references](#keys-references)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -321,7 +321,7 @@ The `main.sh` script contains several configuration options, such as:
 
 For more details, check the `main.sh` file to see all configurable variables.
 
-## Keys References
+## Key References
 - Tchoutouo Ketchassop, Anne Christelle. "L'aménagement linguistique de l'aire Nda' Nda' : mesure de l'intelligibilite des parlers à la standardisation." PhD thesis, Université de Dschang, Études Africaines et Mondialisation, 2021. Supervised by Behan Sammy Chumbow.
 
 - Tchagoua, Guy Merlin. "Usage des langues chez les locuteurs Nda’nda’." *Sociolinguistics in African Contexts: Perspectives and Challenges*, pages 73-86, 2017. Springer.
