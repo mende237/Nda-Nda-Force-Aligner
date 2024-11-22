@@ -12,7 +12,7 @@ This project provides scripts for training and evaluating acoustic models using 
 - [Nda' Nda'](#nda-nda)
 - [Experiments](#experiments)
 - [Scripts Overview](#scripts-overview)
-- [Trainning Configuration](#Configuration)
+- [Training Configuration](#Configuration)
 - [Keys references](#keys-references)
 - [Contributing](#contributing)
 - [License](#license)
@@ -160,7 +160,7 @@ In speech processing, the choice of features is crucial for the performance of s
 
 The dimension of the acoustic coefficient vector extracted from recording frames is 13. When combining MFCCs with pitch features, the number of MFCC coefficients was reduced to 10 to maintain a dimension of 13 with the addition of three pitch-related coefficients. This dimension was empirically determined during experiments, as performance was poor beyond 13. With the addition of delta and delta-delta derived coefficients, the vector dimension increases from 13 to 40.
 
-## Tone integration
+## Tone Integration
 
 The integration of tone is performed during the training of the triphone model, specifically during the construction of the phonetic decision tree. Two groups of questions were integrated:
 
@@ -244,7 +244,7 @@ The integration of tone is performed during the training of the triphone model, 
     <img src="readme_ressources/tone_graph.png" alt="Tone repartition" width="800px" height="400px">
 </p>
 
-### Results of experiments
+### Results of Oxperiments
 
 <div align="center">
     <table>
@@ -288,68 +288,51 @@ The integration of tone is performed during the training of the triphone model, 
 
 
 ## Scripts Overview
+- `main.sh`: Orchestrates the entire process, including data preparation, feature extraction, model training, alignment, and evaluation.
 
-### `main.sh`
+- `Utils/data_preparation/main_data_preparation.sh`: Prepares the data for training and evaluation.
 
-The main script orchestrates the entire process, including data preparation, feature extraction, model training, alignment, and evaluation.
+- `Utils/feature_extractions/features_extractions.sh`: Extracts features from the data for training and testing.
 
-### `monophone_count.py`
+- `training/acoustic_model/monophone_training.sh`: Trains monophone acoustic models.
 
-This script counts the occurrences of monophones and tones, saves the results to CSV files, and generates distribution graphs.
+- `training/acoustic_model/triphone_training.sh`: Trains triphone acoustic models with various configurations.
 
-### `triphone_count.py`
+- `training/acoustic_model/align.sh`: Aligns the data using the trained models.
 
-This script counts the occurrences of triphones, saves the results to CSV files, and generates distribution graphs.
+- `evaluation/evaluation.sh`: Evaluates the trained models on test data.
 
-### `Utils/data_preparation/main_data_preparation.sh`
+- `evaluation/make_graph.sh`: Constructs the graph for decoding.
 
-Prepares the data for training and evaluation.
+- Other scripts: Check other scripts inside the project for additional functionalities.
 
-### `Utils/feature_extractions/features_extractions.sh`
-
-Extracts features from the data for training and testing.
-
-### `training/acoustic_model/monophone_trainning.sh`
-
-Trains monophone acoustic models.
-
-### `training/acoustic_model/triphone_training.sh`
-
-Trains triphone acoustic models with various configurations.
-
-### `training/acoustic_model/align.sh`
-
-Aligns the data using the trained models.
-
-### `evaluation/evaluation.sh`
-
-Evaluates the trained models on test data.
-
-### `evaluation/make_graph.sh`
-
-Constructs the graph for decoding.
-
-## Configuration
+## Training Configuration
 
 The `main.sh` script contains several configuration options, such as:
 
 - `project_name`: Name of the project.
 - `data_root`: Root directory for the data.
 - `nbr_job_feature_extraction`: Number of jobs for feature extraction.
-- `nbr_job_trainning`: Number of jobs for training.
-- `trainning_type`: Type of training to perform (1-5).
+- `nbr_job_training`: Number of jobs for training.
+- `add_question`: Option to add questions for tone integration.
+- `add_pitch_feature`: Option to add pitch features.
+- `training_type`: Type of training to perform (1-5).
 
-## Keys references
+For more details, check the `main.sh` file to see all configurable variables.
+
+## Keys References
+- Tchoutouo Ketchassop, Anne Christelle. "L'aménagement linguistique de l'aire Nda' Nda' : mesure de l'intelligibilite des parlers à la standardisation." PhD thesis, Université de Dschang, Études Africaines et Mondialisation, 2021. Supervised by Behan Sammy Chumbow.
 
 - Tchagoua, Guy Merlin. "Usage des langues chez les locuteurs Nda’nda’." *Sociolinguistics in African Contexts: Perspectives and Challenges*, pages 73-86, 2017. Springer.
 
-- Tchoutouo Ketchassop, Anne Christelle. "L'aménagement linguistique de l'aire Nda' Nda' : mesure de l'intelligibilite des parlers à la standardisation." PhD thesis, Université de Dschang, Études Africaines et Mondialisation, 2021. Supervised by Behan Sammy Chumbow.
-
 - Luong, Hieu-Thi and Vu, Hai-Quan. "A non-expert Kaldi recipe for Vietnamese speech recognition system." In *Proceedings of the Third International Workshop on Worldwide Language Service Infrastructure and Second Workshop on Open Infrastructures and Analysis Frameworks for Human Language Technologies (WLSI/OIAF4HLT2016)*, pages 51-55, 2016.
+
+- Ghahremani, Pegah, et al. "A pitch extraction algorithm tuned for automatic speech recognition." In *2014 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)*, pp. 2494-2498. IEEE, 2014.
+
+- Gales, Mark and Young, Steve. "The application of hidden Markov models in speech recognition." *Foundations and Trends® in Signal Processing*, vol. 1, no. 3, pages 195-304, 2008. Now Publishers, Inc.
 
 - Rabiner, Lawrence R and Schafer, Ronald W. "Introduction to digital speech processing." *Foundations and Trends® in Signal Processing*, vol. 1, no. 1-2, pages 1-194, 2007. Now Publishers, Inc.
 
-- Gales, Mark and Young, Steve. "The application of hidden Markov models in speech recognition." *Foundations and Trends® in Signal Processing*, vol. 1, no. 3, pages 195-304, 2008. Now Publishers, Inc.
 
 - Morgan, Nelson and Bourlard, Herve. "Continuous speech recognition." *IEEE signal processing magazine*, vol. 12, no. 3, pages 24-42, 1995. IEEE.
 
