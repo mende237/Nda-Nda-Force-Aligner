@@ -12,7 +12,8 @@ This project provides scripts for training and evaluating acoustic models using 
 - [Nda' Nda'](#nda-nda)
 - [Experiments](#experiments)
 - [Scripts Overview](#scripts-overview)
-<!-- - [Configuration](#Configuration) -->
+- [Trainning Configuration](#Configuration)
+- [Keys references](#keys-references)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -155,28 +156,136 @@ In speech processing, the choice of features is crucial for the performance of s
 
 - **MFCC**: These coefficients are widely used in speech processing due to their ability to compactly represent spectral information and simulate human sound perception. They effectively capture timbre and tone variations, making them suitable for ASR systems.
 - **Pitch**: As shown by Ghahremani et al. (2014), pitch features can be useful for ASR systems, especially for tonal languages like Vietnamese and Cantonese. Ignoring this feature could result in the loss of crucial information, particularly in linguistic contexts where tone changes word meanings.
-- **Delta and Delta-Delta**: In addition to spectral coefficients, first-order (delta) and second-order (delta-delta) regression coefficients are added to heuristically compensate for the conditional independence assumption made by HMM-based acoustic models. If the original feature vector (static) is \( y_t^s \), the delta parameter, \( \Delta y_t^s \), is given by:
-
-    \[
-    \Delta y_t^s = \frac{\sum_{i=1}^n w_i(y_{t+i}^s - y_{t-i}^s)}{2\sum_{i=1}^n w_i^2}
-    \]
+- **Delta and Delta-Delta**: In addition to spectral coefficients, first-order (delta) and second-order (delta-delta) regression coefficients are added to heuristically compensate for the conditional independence assumption made by HMM-based acoustic models.
 
 The dimension of the acoustic coefficient vector extracted from recording frames is 13. When combining MFCCs with pitch features, the number of MFCC coefficients was reduced to 10 to maintain a dimension of 13 with the addition of three pitch-related coefficients. This dimension was empirically determined during experiments, as performance was poor beyond 13. With the addition of delta and delta-delta derived coefficients, the vector dimension increases from 13 to 40.
 
+## Tone integration
+
+The integration of tone is performed during the training of the triphone model, specifically during the construction of the phonetic decision tree. Two groups of questions were integrated:
+
+- Similar to Luong et al. (2016), the first group focused on phones with the same tone and phones with the same base vowels. The table below shows the grouping of phonetic questions. The first column groups phones with the same base tone, while the second column groups phones with the same base vowel.
+
+    <div align="center">
+        <table>
+            <thead>
+                <tr>
+                    <th>Vowels with the same tone</th>
+                    <th>Same base vowel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>é ə́ í á é ú ó ɛ́ ɨ́ ɔ́</td>
+                    <td>ɔ́ ɔ̀ ɔ̌</td>
+                </tr>
+                <tr>
+                    <td>ɔ̀ ɛ̀ ə̀ ò à</td>
+                    <td>á à</td>
+                </tr>
+                <tr>
+                    <td>î ɛ̂ ə̂ ɔ̂</td>
+                    <td>ə̂ ə́ ə̀</td>
+                </tr>
+                <tr>
+                    <td>ɔ̌ ǔ</td>
+                    <td>í î</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>ó ò</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>ɛ́ ɛ̀ ɛ̂</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>ǔ ú</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+- The second group focused on sound categories that describe the articulatory and acoustic characteristics of phonemes. The sound categories used are nasals and fricatives.
+<div align="center">
+    <table>
+        <thead>
+            <tr>
+                <th>Nasals</th>
+                <th>Fricatives</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>m n ŋ</td>
+                <td>f s z</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 ## Phone statistics
+
+### Monophone Repartition
 
 <p align="center">
     <img src="readme_ressources/monophone_graph.png" alt="Monophone repartition" width="800px" height="400px">
 </p>
 
+### Triphone Repartition
 
 <p align="center">
-    <img src="readme_ressources/triphone_graph.png" alt="triphone repartition" width="800px" height="400px">
+    <img src="readme_ressources/triphone_graph.png" alt="Triphone repartition" width="800px" height="400px">
 </p>
+
+### Tone Repartition
 
 <p align="center">
     <img src="readme_ressources/tone_graph.png" alt="Tone repartition" width="800px" height="400px">
 </p>
+
+### Results of experiments
+
+<div align="center">
+    <table>
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>MFCC</th>
+                <th>+pitch</th>
+                <th>+tone</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>HMM-monophone</td>
+                <td>12.70</td>
+                <td>11.89</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>HMM-triphone</td>
+                <td>9.73</td>
+                <td><strong>8.92</strong></td>
+                <td><strong>8.92</strong></td>
+            </tr>
+            <tr>
+                <td>HMM + SAT</td>
+                <td>12.70</td>
+                <td>12.97</td>
+                <td>12.70</td>
+            </tr>
+            <tr>
+                <td>HMM-DNN</td>
+                <td>21.35</td>
+                <td>19.73</td>
+                <td>18.65</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><strong>Table: Summary of WER results</strong></p>
+</div>
+
 
 ## Scripts Overview
 
@@ -220,7 +329,7 @@ Evaluates the trained models on test data.
 
 Constructs the graph for decoding.
 
-<!-- ## Configuration
+## Configuration
 
 The `main.sh` script contains several configuration options, such as:
 
@@ -228,7 +337,22 @@ The `main.sh` script contains several configuration options, such as:
 - `data_root`: Root directory for the data.
 - `nbr_job_feature_extraction`: Number of jobs for feature extraction.
 - `nbr_job_trainning`: Number of jobs for training.
-- `trainning_type`: Type of training to perform (1-5). -->
+- `trainning_type`: Type of training to perform (1-5).
+
+## Keys references
+
+- Tchagoua, Guy Merlin. "Usage des langues chez les locuteurs Nda’nda’." *Sociolinguistics in African Contexts: Perspectives and Challenges*, pages 73-86, 2017. Springer.
+
+- Tchoutouo Ketchassop, Anne Christelle. "L'aménagement linguistique de l'aire Nda' Nda' : mesure de l'intelligibilite des parlers à la standardisation." PhD thesis, Université de Dschang, Études Africaines et Mondialisation, 2021. Supervised by Behan Sammy Chumbow.
+
+- Luong, Hieu-Thi and Vu, Hai-Quan. "A non-expert Kaldi recipe for Vietnamese speech recognition system." In *Proceedings of the Third International Workshop on Worldwide Language Service Infrastructure and Second Workshop on Open Infrastructures and Analysis Frameworks for Human Language Technologies (WLSI/OIAF4HLT2016)*, pages 51-55, 2016.
+
+- Rabiner, Lawrence R and Schafer, Ronald W. "Introduction to digital speech processing." *Foundations and Trends® in Signal Processing*, vol. 1, no. 1-2, pages 1-194, 2007. Now Publishers, Inc.
+
+- Gales, Mark and Young, Steve. "The application of hidden Markov models in speech recognition." *Foundations and Trends® in Signal Processing*, vol. 1, no. 3, pages 195-304, 2008. Now Publishers, Inc.
+
+- Morgan, Nelson and Bourlard, Herve. "Continuous speech recognition." *IEEE signal processing magazine*, vol. 12, no. 3, pages 24-42, 1995. IEEE.
+
 
 ## Contributing
 
