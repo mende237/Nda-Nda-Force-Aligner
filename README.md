@@ -9,6 +9,7 @@ This project provides scripts for training and evaluating acoustic models using 
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
+- [Nda' Nda'](#ndanda)
 - [Scripts Overview](#scripts-overview)
 <!-- - [Configuration](#Configuration) -->
 - [Contributing](#contributing)
@@ -57,8 +58,8 @@ Utils/
 
 2. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/yourproject.git
-    cd yourproject
+    git clone https://github.com/mende237/Nda-Nda-Force-Aligner.git
+    cd Nda-Nda-Force-Aligner
     ```
 
 3. Install the required Python packages to your Python virtual environment:
@@ -108,9 +109,7 @@ echo 'export KALDI_INSTALLATION_PATH="/home/dimitri/kaldi"' >> ~/.bashrc
     ./initialize.sh <project_name>
     ```
 
-    This script will create a folder named `<project_name>` inside `YOUR_KALDI_INSTALLATION_PATH/egs`. The created folder will contain all the necessary subfolders required by Kaldi to train a model.
-<p align="center">
-    <img src="https://www.researchgate.net/publication/344438159/figure/fig24/AS:962084204474369@1606390157352/Figure-E1-summarizes-the-standard-files-and-directories-of-a-custom-Kaldi-project.png" alt="Kaldi Folder Structure">
+![Kaldi Folder Structure](https://www.researchgate.net/publication/344438159/figure/fig24/AS:962084204474369@1606390157352/Figure-E1-summarizes-the-standard-files-and-directories-of-a-custom-Kaldi-project.png)
 </p>
 
 3. Configure the `main.sh` script with your project-specific settings. For the beginning, you must only configure the project folder path and data root folder path. Inside this file, there is one variable named `project_name`. Set this variable with your `<project_name>`. Check also the variable named `data_root` and set it to the data root you downloaded using this [link](https://drive.google.com/drive/folders/1tY8o_-wLLheOs6_wHTcrOhRNXHpD0dI0?usp=drive_link). Example:
