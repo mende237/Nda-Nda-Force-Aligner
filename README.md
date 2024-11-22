@@ -233,7 +233,7 @@ The integration of tone is performed during the training of the triphone model, 
     <img src="readme_ressources/monophone_graph.png" alt="Monophone repartition" width="800px" height="400px">
 </p>
 
-### Triphone Repartition
+### Distribution of the 40 most common Triphones
 
 <p align="center">
     <img src="readme_ressources/triphone_graph.png" alt="Triphone repartition" width="800px" height="400px">
@@ -245,7 +245,7 @@ The integration of tone is performed during the training of the triphone model, 
     <img src="readme_ressources/tone_graph.png" alt="Tone repartition" width="800px" height="400px">
 </p>
 
-### Results of Oxperiments
+### Results of Experiments
 
 <div align="center">
     <table>
