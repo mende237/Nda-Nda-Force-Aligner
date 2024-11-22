@@ -307,6 +307,8 @@ The integration of tone is performed during the training of the triphone model, 
 
 - Other scripts: Check other scripts inside the project for additional functionalities.
 
+**NB:** The code for training the language model was taken from [source](https://github.com/daandouwe/ngram-lm)
+
 ## Training Configuration
 
 The `main.sh` script contains several configuration options, such as:
