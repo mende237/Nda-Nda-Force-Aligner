@@ -110,15 +110,35 @@ echo 'export KALDI_INSTALLATION_PATH="/home/dimitri/kaldi"' >> ~/.bashrc
 
     This script will create a folder named `<project_name>` inside `YOUR_KALDI_INSTALLATION_PATH/egs`. The created folder will contain all the necessary subfolders required by Kaldi to train a model.
 <p align="center">
-    <img src="https://maelfabien.github.io/assets/images/directorystructure.png" alt="Kaldi Folder Structure">
+    <img src="https://www.researchgate.net/publication/344438159/figure/fig24/AS:962084204474369@1606390157352/Figure-E1-summarizes-the-standard-files-and-directories-of-a-custom-Kaldi-project.png" alt="Kaldi Folder Structure">
 </p>
-2. Configure the `main.sh` script with your project-specific settings.
 
-3. Run the main script:
+3. Configure the `main.sh` script with your project-specific settings. For the beginning, you must only configure the project folder path and data root folder path. Inside this file, there is one variable named `project_name`. Set this variable with your `<project_name>`. Check also the variable named `data_root` and set it to the data root you downloaded using this [link](https://drive.google.com/drive/folders/1tY8o_-wLLheOs6_wHTcrOhRNXHpD0dI0?usp=drive_link). Example:
+
+```sh
+data_root="/home/dimitri/Documents/memoire/data/mono"
+project_name="test_MFCC_pitch_tone_1_2"
+```
+
+**NB:** The path to data is the one that directly leads to the folder containing the file named `utterance.txt`.
+
+4. Run the main script:
     ```sh
     ./main.sh
     ```
+This command will automatically perform all tasks from data preparation to evaluation, including feature extraction and model training (acoustic and language models). Four acoustic models will be trained:
+- Monophone HMM
+- Triphone HMM
+- Triphone HMM + SAT
+- Hybrid HMM-DNN
 
+The training results will be stored respectively in the following files:
+- `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/train_mono_50_per_spk/decode/scoring_kaldi/best_wer`
+- `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/train_tri_delta_delta_50_per_spk/decode/scoring_kaldi/best_wer`
+- `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/train_tri_sat_50_per_spk/decode/scoring_kaldi/best_wer`
+- `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/tri4_nnet/decode/scoring_kaldi/best_wer`
+
+The evaluation metric is WER (Word Error Rate).
 ## Scripts Overview
 
 ### `main.sh`
