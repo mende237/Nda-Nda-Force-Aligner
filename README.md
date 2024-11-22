@@ -224,6 +224,7 @@ The integration of tone is performed during the training of the triphone model, 
         </tbody>
     </table>
 </div>
+
 ## Phone statistics
 
 ### Monophone Repartition
