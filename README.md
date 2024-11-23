@@ -100,6 +100,7 @@ To set the Kaldi installation path as an environment variable, add the following
 
 ```sh
 echo 'export KALDI_INSTALLATION_PATH="/home/dimitri/kaldi"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ## Usage
