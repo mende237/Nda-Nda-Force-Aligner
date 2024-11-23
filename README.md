@@ -105,7 +105,8 @@ echo 'export KALDI_INSTALLATION_PATH="/home/dimitri/kaldi"' >> ~/.bashrc
 ## Usage
 
 1. Prepare your data by placing it in the appropriate directories. You can get the data by using this [link](https://drive.google.com/drive/folders/1tY8o_-wLLheOs6_wHTcrOhRNXHpD0dI0?usp=drive_link). Inside this drive folder, you will find two folders: `mono` and `stereo`. The `mono` folder contains audio data with one channel, and the `stereo` folder contains the same data with two channels. It is recommended to use the `mono` data.
-2. Run the `initialize.sh` script located in the `init_kaldi_projet_structure/` folder. Change the directory to `init_kaldi_projet_structure/` and run the command below, where `<project_name>` is the name of the folder that will contain all the data in Kaldi format:
+
+2. Run the `initialize.sh` script located in the `init_kaldi_project_structure/` folder. Change the directory to `init_kaldi_project_structure/` and run the command below, where `<project_name>` is the name of the folder that will contain all the data subfolders which are necessary to extract features, train and test an acoustic model in Kaldi format:
 
     ```sh
     ./initialize.sh <project_name>
@@ -140,7 +141,7 @@ The training results will be stored respectively in the following files:
 - `YOUR_KALDI_INSTALLATION_PATH/egs/PROJECT_NAME/exp/tri4_nnet/decode/scoring_kaldi/best_wer`
 
 The evaluation metric is WER (Word Error Rate).
-## Nda' Nda'
+# Nda' Nda'
 The **Nda' Nda'** language is spoken in the Western region of Cameroon, spread across four departments: Ndé, with the villages of Bangoua, Bamena, Balengou, Bazou, and Batchingou; Hauts-Plateaux, with the villages of Bangou, Batoufam, and Bandrefam; Koung-Khi, with the villages of Bangang-Fongang and Bangang-Fondji; and Haut-Nkam, with the village of Batcha. In 1990, the number of speakers was estimated to be 10,000 [source](https://fr.wikipedia.org/wiki/Nda'nda'). It is a tonal language composed of four tones: **"high" (ˊ), "low" (ˋ), "low-high" (ˇ), and "high-low" (ˆ)**. For example, kwé translates to "eaten," mbɛ̀ translates to "meat," and kúndyə̂ translates to "bed."
 
 <p align="center">
@@ -233,7 +234,7 @@ The integration of tone is performed during the training of the triphone model, 
     <img src="readme_ressources/monophone_graph.png" alt="Monophone repartition" width="800px" height="400px">
 </p>
 
-### Distribution of the 40 most common Triphones
+### Distribution of the 40 most common Triphones 
 
 <p align="center">
     <img src="readme_ressources/triphone_graph.png" alt="Triphone repartition" width="800px" height="400px">
@@ -245,7 +246,7 @@ The integration of tone is performed during the training of the triphone model, 
     <img src="readme_ressources/tone_graph.png" alt="Tone repartition" width="800px" height="400px">
 </p>
 
-### Results of Experiments
+### Results of Oxperiments
 
 <div align="center">
     <table>
