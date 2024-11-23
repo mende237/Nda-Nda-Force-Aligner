@@ -12,8 +12,8 @@ This project provides scripts for training and evaluating acoustic models using 
 - [Nda' Nda'](#nda-nda)
 - [Experiments](#experiments)
 - [Scripts Overview](#scripts-overview)
-- [Training Configuration](#Configuration)
-- [Key references](#keys-references)
+- [Training Configuration](#training-configuration)
+- [Key references](#key-references)
 - [Contributing](#contributing)
 - [License](#license)
 
