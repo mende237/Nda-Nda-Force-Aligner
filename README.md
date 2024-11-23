@@ -246,7 +246,7 @@ The integration of tone is performed during the training of the triphone model, 
     <img src="readme_ressources/tone_graph.png" alt="Tone repartition" width="800px" height="400px">
 </p>
 
-### Results of Oxperiments
+### Results of Experiments
 
 <div align="center">
     <table>
