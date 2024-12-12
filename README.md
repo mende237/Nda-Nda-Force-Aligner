@@ -47,7 +47,7 @@ Utils/
 
 ## Requirements
 
-- Kaldi
+- Kaldi (wjs scripts version s5)
 - Python 3.x
 - NumPy
 - Matplotlib
