@@ -3,10 +3,11 @@
 calling_script_path=$(pwd)
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 cd "$script_path" || exit 1
+# shellcheck disable=SC1091
 source "Utils/utils.sh"
 
 
-data_root="/home/dimitri/Documents/memoire/data/mono"
+data_root="/home/dimitri/Downloads/mono-20250606T112759Z-1-001/mono"
 # project_name="test_MFCC_1_2"
 # project_name="test_MFCC_pitch_1_2"
 project_name="test_MFCC_pitch_tone_1_2"

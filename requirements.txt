@@ -4,7 +4,7 @@ fonttools==4.54.1
 kaldiio==2.18.0
 kiwisolver==1.4.7
 matplotlib==3.9.2
-numpy==1.24.3
+# numpy==1.24.3
 packaging==24.1
 pillow==11.0.0
 pydub==0.25.1
