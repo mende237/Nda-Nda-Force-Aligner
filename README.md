@@ -35,7 +35,7 @@ requirements.txt
 training/
     ├── acoustic_model/
     └── language_model/
-Utils/
+utils/
     ├── data_preparation/
     ├── init_kaldi_projet_structure/
     ├── phone_statistics/
@@ -293,9 +293,9 @@ The integration of tone is performed during the training of the triphone model, 
 ## Scripts Overview
 - `main.sh`: Orchestrates the entire process, including data preparation, feature extraction, model training, alignment, and evaluation.
 
-- `Utils/data_preparation/main_data_preparation.sh`: Prepares the data for training and evaluation.
+- `utils/data_preparation/main_data_preparation.sh`: Prepares the data for training and evaluation.
 
-- `Utils/feature_extractions/features_extractions.sh`: Extracts features from the data for training and testing.
+- `utils/feature_extractions/features_extractions.sh`: Extracts features from the data for training and testing.
 
 - `training/acoustic_model/monophone_training.sh`: Trains monophone acoustic models.
 

@@ -5,7 +5,7 @@ calling_script_path=$(pwd)
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 cd "$script_path" || exit 1
 
-source ../Utils/utils.sh
+source ../utils/utils.sh
 
 nbr_warning=0
 nbr_error=0

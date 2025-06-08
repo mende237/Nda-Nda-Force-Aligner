@@ -4,7 +4,7 @@ calling_script_path=$(pwd)
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 cd "$script_path" || exit 1
 # shellcheck disable=SC1091
-source "Utils/utils.sh"
+source "utils/utils.sh"
 
 
 data_root="/home/dimitri/Downloads/mono-20250606T112759Z-1-001/mono"
@@ -49,7 +49,7 @@ if $add_pitch_feature; then
 fi
 
 print_info "******************************************* Data preparation *********************************************"
-./Utils/data_preparation/main_data_preparation.sh $question_option $project_name $data_root
+./utils/data_preparation/main_data_preparation.sh $question_option $project_name $data_root
 
 print_info "******************************************* Feature extraction *******************************************"
 print_info "                                            Trainning features                                            "
