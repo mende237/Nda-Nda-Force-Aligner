@@ -1,6 +1,13 @@
 import argparse
 from textgrid import TextGrid
 import os
+import logging
+
+
+# Configure the logging module
+logging.basicConfig(filename='../../logs/error.log', level=logging.ERROR,
+                    format='%(asctime)s - %(levelname)s - %(filename)s - Line %(lineno)d - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 def textgrid_to_ctm(textgrid_file, tier_name, tier_index, ctm_output_file):
     """
@@ -52,8 +59,8 @@ def main():
 
     try:
         textgrid_to_ctm(args.textgrid_file, args.tier_name, args.tier_index, args.ctm_output_file)
-    except Exception as e:
-        print(f"Error: {e}")
+    except Exception as error:
+        logging.error(str(error))
 
 if __name__ == "__main__":
     main()

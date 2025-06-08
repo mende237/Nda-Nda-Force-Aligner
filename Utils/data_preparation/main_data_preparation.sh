@@ -174,7 +174,7 @@ while [[ ! $response =~ ^[YyNn]$ ]]; do
         cp $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data/test.tokens
         model_order=3
         model_name=nda\'nda\'
-        python ../../training/language_model/ngram-lm/main.py --order $model_order \
+        python ../../training/language_model/lm/main.py --order $model_order \
          --interpolate --save-arpa --name $model_name \
          --data $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data \
          --out  $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out \
