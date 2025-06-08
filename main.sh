@@ -20,6 +20,7 @@ triphone_delta_model_folder_name="train_tri_delta_50_per_spk"
 triphone_delta_delta_model_folder_name="train_tri_delta_delta_50_per_spk"
 triphone_lda_mllt_model_folder_name="train_tri_lda_mllt_50_per_spk"
 triphone_sat_model_folder_name="train_tri_sat_50_per_spk"
+test_data_align_folder_name="test_align"
 monophone_align_folder="align_mono_50_per_spk"
 triphone_delta_align_folder="align_tri_delta_50_per_spk"
 triphone_delta_delta_align_folder="align_tri_delta_delta_50_per_spk"
@@ -75,6 +76,16 @@ fi
 
 print_info "******************************************* Monophone Alignement *******************************************"
 ./training/acoustic_model/align.sh $project_name $monophone_model_folder_name $monophone_align_folder $align_conf_file_name
+
+
+
+print_info "******************************************* Monophone Alignement Test Data *******************************************"
+./training/acoustic_model/align.sh --test $project_name $monophone_model_folder_name $monophone_align_folder/$test_data_align_folder_name $align_conf_file_name
+
+
+exit 1
+
+
 
 print_info "******************************************* Triphone delta Training *******************************************"
 ./training/acoustic_model/triphone_training.sh $project_name $nbr_leaves $nbr_gauss $monophone_align_folder $triphone_delta_model_folder_name $train_tri_conf_file_name

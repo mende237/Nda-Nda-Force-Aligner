@@ -8,8 +8,15 @@ source ../../utils/utils.sh
 
 options=
 sat_align=false
+test=false
+
+
 while [[ $# -gt 0 ]]; do
     case $1 in
+        --test)
+            test=true
+            shift
+            ;;
         --sat)
             sat_align=true
             shift
@@ -33,6 +40,9 @@ nbr_error=0
 # Check the number of arguments
 if [ $# -ne 4 ]; then
     print_info "Usage: $0 [option] <project name> <model folder name> <output alignment folder name> <configuration file name>"    
+    print_info "--test if you want to align the test data"
+    print_info "--sat if you want to use the SAT aligner"
+    print_info "--use-graphs if you want to use the graphs in the alignment"
     exit 1
 fi
 
@@ -87,10 +97,19 @@ if is_folder_exist exp/$output_alignment_folder_name; then
     rm -rf exp/$output_alignment_folder_name/*
 fi
 
+data_path=data/train
+if $test; then
+    if ! is_folder_exist data/test; then
+        print_error "The folder data/test doesn't exist"
+        exit 1
+    fi
+    data_path=data/test
+fi
+
 if $sat_align; then
-    steps/align_fmllr.sh $config_option --cmd "$train_cmd" data/train data/lang exp/$model_folder_name exp/$output_alignment_folder_name
+    steps/align_fmllr.sh $config_option --cmd "$train_cmd" $data_path data/lang exp/$model_folder_name exp/$output_alignment_folder_name
 else
-    steps/align_si.sh $options $config_option --cmd "$train_cmd" data/train data/lang exp/$model_folder_name exp/$output_alignment_folder_name
+    steps/align_si.sh $options $config_option --cmd "$train_cmd" $data_path data/lang exp/$model_folder_name exp/$output_alignment_folder_name
 fi
 
 status=$?

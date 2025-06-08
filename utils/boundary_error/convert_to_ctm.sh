@@ -28,6 +28,6 @@ done
 
 cat *.ctm > merged_alignment.ctm
 
-sort -k1,1 merged_alignment.ctm > merged_alignment.ctm
+# sort -k1,1 merged_alignment.ctm > merged_alignment.ctm
 
 cd "$calling_script_path" || exit 1
