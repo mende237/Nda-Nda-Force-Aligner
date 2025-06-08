@@ -9,10 +9,15 @@ source ../../utils/utils.sh
 options=
 sat_align=false
 test=false
-
+nj="--nj 1"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
+        --nj)
+            nj="--nj $2"
+            shift
+            shift
+            ;;
         --test)
             test=true
             shift
@@ -39,7 +44,10 @@ nbr_error=0
 
 # Check the number of arguments
 if [ $# -ne 4 ]; then
-    print_info "Usage: $0 [option] <project name> <model folder name> <output alignment folder name> <configuration file name>"    
+    print_info "Usage: $0 [option] <project name> <model folder name> <output alignment folder name> <configuration file name>"   
+    print_info "[option] = --nj <number of jobs> | --test | --sat | --use-graphs"
+    print_info "Example: $0 --nj 4 my_project my_model_folder my_output_alignment_folder my_config_file.conf" 
+    printf_info "--nj if you want to specify the number of jobs (default is 1)"
     print_info "--test if you want to align the test data"
     print_info "--sat if you want to use the SAT aligner"
     print_info "--use-graphs if you want to use the graphs in the alignment"
@@ -107,9 +115,9 @@ if $test; then
 fi
 
 if $sat_align; then
-    steps/align_fmllr.sh $config_option --cmd "$train_cmd" $data_path data/lang exp/$model_folder_name exp/$output_alignment_folder_name
+    steps/align_fmllr.sh $config_option $nj --cmd "$train_cmd" $data_path data/lang exp/$model_folder_name exp/$output_alignment_folder_name
 else
-    steps/align_si.sh $options $config_option --cmd "$train_cmd" $data_path data/lang exp/$model_folder_name exp/$output_alignment_folder_name
+    steps/align_si.sh $options $config_option $nj --cmd "$train_cmd" $data_path data/lang exp/$model_folder_name exp/$output_alignment_folder_name
 fi
 
 status=$?

@@ -15,6 +15,7 @@ add_question=true
 add_pitch_feature=true
 nbr_job_feature_extraction=8
 nbr_job_trainning=4
+nb_job_alignment=2
 monophone_model_folder_name="train_mono_50_per_spk"
 triphone_delta_model_folder_name="train_tri_delta_50_per_spk"
 triphone_delta_delta_model_folder_name="train_tri_delta_delta_50_per_spk"
@@ -75,12 +76,12 @@ fi
 
 
 print_info "******************************************* Monophone Alignement *******************************************"
-./training/acoustic_model/align.sh $project_name $monophone_model_folder_name $monophone_align_folder $align_conf_file_name
+./training/acoustic_model/align.sh --nj $nbr_job_trainning $project_name $monophone_model_folder_name $monophone_align_folder $align_conf_file_name
 
 
 
 print_info "******************************************* Monophone Alignement Test Data *******************************************"
-./training/acoustic_model/align.sh --test $project_name $monophone_model_folder_name $monophone_align_folder/$test_data_align_folder_name $align_conf_file_name
+./training/acoustic_model/align.sh --nj $nb_job_alignment --test $project_name $monophone_model_folder_name $monophone_align_folder/$test_data_align_folder_name $align_conf_file_name
 
 
 exit 1
