@@ -71,10 +71,10 @@ def load_reference_alignment(align_path):
                 continue
             
             utt_id = parts[0]
-            start_time = float(parts[1])
-            duration = float(parts[2])
+            start_time = float(parts[2])
+            duration = float(parts[3])
             
-            phone = parts[3]
+            phone = parts[4]
             alignment.append((start_time, duration, phone))
     return alignment
 
@@ -93,6 +93,20 @@ def equal_phone(phone1, phone2):
     """
     Check if two phones are equal, considering possible variations.
     """
+    phone1 = phone1.lower()
+    phone2 = phone2.lower()
+    # Normalize common accented characters to their canonical forms
+    replacements = {
+        'ı́': 'í',  # Unicode composed vs decomposed
+        'é': 'é',
+        'ɑ́': 'á',
+        'e': 'é',
+        'ə': 'ə́',
+        'ɨ': 'ɨ́ '
+    }
+    phone1 = replacements.get(phone1, phone1)
+    phone2 = replacements.get(phone2, phone2)
+
     if phone1 == phone2 or (phone1 == 'pau' and phone2 == 'sil') or (phone1 == 'sil' and phone2 == 'pau'):
         return True
     # Add more conditions here if needed for specific phone variations
@@ -103,9 +117,9 @@ def equal_phone(phone1, phone2):
 def compute_boundary_error(data_path, align_path):
     phone_mapping_to_ctm(align_path)
     alignments = load_alignment(align_path)
-    
+    print(alignments['loc_1_enonce_28'])  # Debugging line to check loaded alignments
     ctm_files = get_ctm_files(data_path)
-    
+    boundary_errors = []
     for file in ctm_files:
         utt_id = os.path.basename(file).split('.')[0]
         if utt_id not in alignments:
@@ -116,7 +130,6 @@ def compute_boundary_error(data_path, align_path):
         reference_alignment = load_reference_alignment(file)
 
         # Use dynamic programming to align phones (edit distance with backtracking)
-
         n = len(alignment)
         m = len(reference_alignment)
         dp = np.zeros((n + 1, m + 1))
@@ -163,18 +176,19 @@ def compute_boundary_error(data_path, align_path):
             if align_item is not None and ref_item is not None:
                 start_time, duration, phone = align_item
                 ref_start, ref_duration, ref_phone = ref_item
-                if phone == ref_phone:
+                if equal_phone(phone, ref_phone):
                     start_error = abs(start_time - ref_start)
                     end_error = abs((start_time + duration) - (ref_start + ref_duration))
-                    print(f"Boundary error for {utt_id}: Phone: {phone}, Start Error: {start_error}, End Error: {end_error}")
+                    error = start_error + end_error
+                    boundary_errors.append(error)
                 else:
                     logging.error(f"Phone mismatch for {utt_id}: {phone} vs {ref_phone}")
-            # Optionally, handle insertions/deletions if needed
-   
-   
-    # print(f"Found {len(ctm_files)} CTM files in {data_path}")
-    print(ctm_files[0])
-    pass
+
+    if boundary_errors:
+        mean_error = np.mean(boundary_errors)
+        median_error = np.median(boundary_errors)
+        print(f"Mean boundary error = {mean_error:.4f}, Median boundary error = {median_error:.4f}")
+    
 
 
 
