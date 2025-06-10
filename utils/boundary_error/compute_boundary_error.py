@@ -102,7 +102,10 @@ def equal_phone(phone1, phone2):
         'ɑ́': 'á',
         'e': 'é',
         'ə': 'ə́',
-        'ɨ': 'ɨ́ '
+        'ɨ': 'ɨ́ ',
+        'u': 'ú',
+        'a': 'á',
+        'i': 'í',
     }
     phone1 = replacements.get(phone1, phone1)
     phone2 = replacements.get(phone2, phone2)
@@ -114,10 +117,9 @@ def equal_phone(phone1, phone2):
 
 
 
-def compute_boundary_error(data_path, align_path):
+def compute_boundary_error(data_path, align_path, score_file_path=None):
     phone_mapping_to_ctm(align_path)
     alignments = load_alignment(align_path)
-    print(alignments['loc_1_enonce_28'])  # Debugging line to check loaded alignments
     ctm_files = get_ctm_files(data_path)
     boundary_errors = []
     for file in ctm_files:
@@ -188,18 +190,22 @@ def compute_boundary_error(data_path, align_path):
         mean_error = np.mean(boundary_errors)
         median_error = np.median(boundary_errors)
         print(f"Mean boundary error = {mean_error:.4f}, Median boundary error = {median_error:.4f}")
-    
-
+        if score_file_path:
+            with open(score_file_path, 'w') as f:
+                f.write(f"Mean boundary error = {mean_error:.4f}\n")
+                f.write(f"Median boundary error = {median_error:.4f}\n")
+        
 
 
 def main():
     parser = argparse.ArgumentParser(description="Compute boundary error between audio and alignment.")
     parser.add_argument("data_path", type=str, help="Path to the data folder.")
     parser.add_argument("align_path", type=str, help="Path to the alignment folder.")
+    parser.add_argument("--score-file-path", type=str, default=None, help="Path to save the score file (optional).")
     args = parser.parse_args()
 
     try:
-        compute_boundary_error(args.data_path, args.align_path)
+        compute_boundary_error(args.data_path, args.align_path, args.score_file_path)
     except Exception as error:
         logging.error(str(error))
 

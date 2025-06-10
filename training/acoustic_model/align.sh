@@ -8,6 +8,7 @@ source ../../utils/utils.sh
 
 options=
 sat_align=false
+hybrid_align=false
 test=false
 nj="--nj 1"
 
@@ -24,6 +25,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --sat)
             sat_align=true
+            shift
+            ;;
+        --hybrid)
+            hybrid_align=true
             shift
             ;;
         --use-graphs)
@@ -109,6 +114,7 @@ data_path=data/train
 if $test; then
     if ! is_folder_exist data/test; then
         print_error "The folder data/test doesn't exist"
+         ((nbr_error++))
         exit 1
     fi
     data_path=data/test
@@ -116,7 +122,9 @@ fi
 
 if $sat_align; then
     steps/align_fmllr.sh $config_option $nj --cmd "$train_cmd" $data_path data/lang exp/$model_folder_name exp/$output_alignment_folder_name
-else
+elif $hybrid_align; then
+    steps/nnet2/align.sh $config_option $nj --cmd "$train_cmd" $data_path data/lang exp/$model_folder_name exp/$output_alignment_folder_name
+else 
     steps/align_si.sh $options $config_option $nj --cmd "$train_cmd" $data_path data/lang exp/$model_folder_name exp/$output_alignment_folder_name
 fi
 

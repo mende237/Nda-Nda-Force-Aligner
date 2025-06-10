@@ -8,11 +8,18 @@ cd "$script_path" || exit 1
 source ../utils.sh
 
 convert_textgrid_to_ctm=false
-
+score_file_path_option=""
+score_file_path=""
 while [[ $# -gt 0 ]]; do
     case $1 in
         --convert-textgrid-to-ctm)
             convert_textgrid_to_ctm=true
+            shift
+            ;;
+        --score-file-path)
+            score_file_path_option="$1 $2"
+            score_file_path="$2"
+            shift
             shift
             ;;
         *)
@@ -95,7 +102,7 @@ print_info "The current directory is: $script_path"
 
 print_info "Computing boundary error started."
 
-python ./compute_boundary_error.py $test_data_path $align_folder_path
+python ./compute_boundary_error.py $score_file_path_option $test_data_path $align_folder_path
 status=$?
 if [ $status -eq 1 ]; then
     ((nbr_error++))
@@ -103,7 +110,11 @@ if [ $status -eq 1 ]; then
     exit 1
 fi
 
-print_info "Computing boundary error completed successfully."
+print_info "Computing boundary error completed successfully.  \033[1;33m Warning Number = $nbr_warning \033[0m  \033[1;31m Error Number = $nbr_error \033[0m"
+
+if [[ -n "$score_file_path_option" ]]; then
+    print_info "Boundary error scores saved to: $score_file_path"
+fi
 
 
 cd "$calling_script_path" || exit 1
