@@ -219,6 +219,15 @@ else
     ((nbr_warning++))
 fi
 
+
+if [ ! -d "timit" ]; then
+    mkdir -p "timit"
+    print_info "Folder created: timit"
+else
+    print_warning "Folder already exists: timit"
+    ((nbr_warning++))
+fi
+
 print_info "End of initialization of project named $projet_name. \033[1;33m Warning Number = $nbr_warning \033[0m"
 
 
