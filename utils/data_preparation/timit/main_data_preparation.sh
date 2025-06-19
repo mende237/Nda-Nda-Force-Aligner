@@ -4,7 +4,6 @@ calling_script_path=$(pwd)
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 cd "$script_path" || exit 1
 source "../../utils.sh"
-source "../bash_scripts/delete_file.sh"
 
 
 
@@ -62,6 +61,9 @@ lm_data_file=$lm_root_data/train.tokens
 lm_dir=data/local/local_lm
 output_model_dir=$lm_dir/arpa
 wordlist_folder=$lm_dir/data
+lm_model_name=timit
+lm_model_order=3
+
 
 print_info "*********************** train data preparation ****************************"
 python generate_text_segment_wav_scp_file.py --lm $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $data_root $KALDI_INSTALLATION_PATH/egs/$project_name/data
@@ -106,6 +108,11 @@ echo 'sil' > $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/optional
 
 
 delete_in_lang_local_auto_generated_file "$project_name"
+status=$?
+if [ $status -eq 1 ]; then
+    ((nbr_error++))
+    print_error "When deleting auto generated files"
+fi
 
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 
@@ -121,6 +128,61 @@ if [ $status -eq 1 ]; then
     ((nbr_error++))
     print_error "When creating other files in data/local and data/lang folders "
 fi
+
+
+cd "$script_path" || exit 1
+print_info "The current directory is: $script_path"
+
+response=""
+while [[ ! $response =~ ^[YyNn]$ ]]; do
+    read -p "Would you like to train language model with data inside $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file ? (y/n): " response
+    if [[ $response =~ ^[Yy]$ ]]; then
+        if [ ! -d "$KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out" ]; then
+            mkdir -p "$KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out"
+            print_info "Folder created: $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out"
+        else
+            print_warning "Folder already exists: $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out"
+            ((nbr_warning++))
+        fi
+        cp $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data/valid.tokens
+        cp $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data/test.tokens
+        lm_model_order=3
+        python ../../../training/language_model/lm/main.py --order $lm_model_order \
+         --interpolate --save-arpa --name $lm_model_name \
+         --data $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data \
+         --out  $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out \
+         --output-model $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir
+
+        gzip -f $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir/$lm_model_name"."$lm_model_order"gram.arpa"
+
+        status=$?
+        if [ $status -eq 1 ]; then
+            ((nbr_error++))
+            print_error "During language model training"
+        else
+            print_info "End of language model training check the output inside folders $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir and $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out"
+        fi
+
+        cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
+        current_directory=$(pwd)
+        print_info "The current directory is: $current_directory"
+        
+        print_info "Conversion of the language model from arpa format to FST format"
+        utils/format_lm.sh data/lang $output_model_dir/$lm_model_name"."$lm_model_order"gram.arpa.gz" data/local/lang/lexicon.txt data/lang
+
+        if [ $status -eq 1 ]; then
+            ((nbr_error++))
+            print_error "During language model conversion"
+        else
+            print_info "End of conversion see result inside folder data/lang"
+        fi
+    elif [[ $response =~ ^[Nn]$ ]]; then
+        print_info "Skip language model training"
+    else
+        echo "Invalid response. Please enter 'y' for yes or 'n' for no."
+    fi
+done
+
 
 print_info "Deactivate virtual environment $python_virtual_environement_path"
 deactivate

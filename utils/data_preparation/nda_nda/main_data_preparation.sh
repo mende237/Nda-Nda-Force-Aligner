@@ -3,9 +3,8 @@
 calling_script_path=$(pwd)
 script_path="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 cd "$script_path" || exit 1
-source "../utils.sh"
-cd "$script_path/bash_scripts" || exit 1
-source "$script_path/bash_scripts/delete_file.sh"
+source "../../utils.sh"
+source "../bash_scripts/delete_file.sh"
 cd "$script_path" || exit 1
 
 add_question=false
@@ -36,7 +35,7 @@ nbr_speaker=$3
 nbr_warning=0
 nbr_error=0
 
-config_file="../../configs/Config.json"
+config_file="../../../configs/Config.json"
 
 project_setup_verification $project_name
 
@@ -77,6 +76,8 @@ lm_root_data=data/local/local_lm/data/nda\'nda\'
 lm_data_file=data/local/local_lm/data/nda\'nda\'/train.tokens
 lm_dir=data/local/local_lm
 output_model_dir=$lm_dir/arpa
+lm_model_name=nda\'nda\'
+lm_model_order=3
 
 
 print_info "*********************** train data preparation ****************************"
@@ -139,6 +140,13 @@ fi
 
 delete_in_lang_local_auto_generated_file "$project_name"
 
+status=$?
+if [ $status -eq 1 ]; then
+    ((nbr_error++))
+    print_error "When deleting auto generated files"
+fi
+
+
 cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
 
 current_directory=$(pwd)
@@ -172,15 +180,14 @@ while [[ ! $response =~ ^[YyNn]$ ]]; do
         fi
         cp $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data/valid.tokens
         cp $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_data_file $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data/test.tokens
-        model_order=3
-        model_name=nda\'nda\'
-        python ../../training/language_model/lm/main.py --order $model_order \
-         --interpolate --save-arpa --name $model_name \
+        lm_model_order=3
+        python ../../../training/language_model/lm/main.py --order $lm_model_order \
+         --interpolate --save-arpa --name $lm_model_name \
          --data $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_root_data \
          --out  $KALDI_INSTALLATION_PATH/egs/$project_name/$lm_dir/out \
          --output-model $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir
 
-        gzip -f $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir/$model_name"."$model_order"gram.arpa"
+        gzip -f $KALDI_INSTALLATION_PATH/egs/$project_name/$output_model_dir/$lm_model_name"."$lm_model_order"gram.arpa"
 
         status=$?
         if [ $status -eq 1 ]; then
@@ -195,7 +202,7 @@ while [[ ! $response =~ ^[YyNn]$ ]]; do
         print_info "The current directory is: $current_directory"
         
         print_info "Conversion of the language model from arpa format to FST format"
-        utils/format_lm.sh data/lang $output_model_dir/$model_name"."$model_order"gram.arpa.gz" data/local/lang/lexicon.txt data/lang
+        utils/format_lm.sh data/lang $output_model_dir/$lm_model_name"."$lm_model_order"gram.arpa.gz" data/local/lang/lexicon.txt data/lang
 
         if [ $status -eq 1 ]; then
             ((nbr_error++))

@@ -4,7 +4,7 @@ import re
 import logging
 
 # Configure the logging module
-logging.basicConfig(filename='../../logs/error.log', level=logging.ERROR,
+logging.basicConfig(filename='../../../logs/error.log', level=logging.ERROR,
                     format='%(asctime)s - %(levelname)s - %(filename)s - Line %(lineno)d - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 

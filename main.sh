@@ -56,7 +56,7 @@ if $add_pitch_feature; then
 fi
 
 print_info "******************************************* Data preparation *********************************************"
-./utils/data_preparation/main_data_preparation.sh $question_option $project_name $data_root
+./utils/data_preparation/nda_nda/main_data_preparation.sh $question_option $project_name $data_root
 
 print_info "******************************************* Feature extraction *******************************************"
 print_info "                                            Trainning features                                            "
