@@ -222,3 +222,20 @@ delete_in_lang_local_auto_generated_file() {
 }
 
 
+convert_wav_files() {
+    local folder_path="$1"
+
+    # Check if the folder path is provided
+    if [ -z "$folder_path" ]; then
+        print_error "Please provide a folder path."
+        return 1
+    fi
+
+    local name=
+    # Find all WAV files and convert them
+    find "$folder_path" -type f -iname "*.wav" | while read -r wav_file; do
+        name="${wav_file%.*}"
+        sox "$wav_file" "$name"_temp.wav && mv "$name"_temp.wav "$wav_file"
+    done
+}
+
