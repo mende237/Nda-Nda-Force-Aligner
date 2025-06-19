@@ -7,9 +7,25 @@ source "../../utils.sh"
 
 
 
+convert_nist_to_riff=false
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --convert-to-riff)
+            convert_nist_to_riff=true
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+
+
 # Check the number of arguments
 if [ $# -ne 2 ]; then
     print_info "Usage: $0 [options] <project name> <data path folder root>"
+     print_info "--convert-to-riff if you want to convert audio file from NIST to RIFF or RIFX"
     exit 1
 fi
 
@@ -63,6 +79,21 @@ output_model_dir=$lm_dir/arpa
 wordlist_folder=$lm_dir/data
 lm_model_name=timit
 lm_model_order=3
+pitch_conf_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/conf/pitch.conf"
+mfcc_conf_file_path="$KALDI_INSTALLATION_PATH/egs/$project_name/conf/mfcc.conf"
+
+if $convert_nist_to_riff; then
+    print_info "*********************** Convertion of files to RIFF or RIFX format ****************************"
+    convert_wav_files $data_root
+    status=$?
+    if [ $status -eq 1 ]; then
+        ((nbr_error++))
+        print_error "Error when converting files to RIFF or RIFX format"
+    fi
+else
+    print_warning "Skipping data conversion! If your data is in NIST format, you will not be able to extract MFCC features!!"
+   ((nbr_warning++))
+fi
 
 
 print_info "*********************** train data preparation ****************************"
@@ -106,6 +137,23 @@ printf 'sil\nspn\n' > "$KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lan
 print_info "optional_silence.txt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang"
 echo 'sil' > $KALDI_INSTALLATION_PATH/egs/$project_name/data/local/lang/optional_silence.txt
 
+
+cd "$KALDI_INSTALLATION_PATH/egs/$project_name" || exit 1
+current_directory=$(pwd)
+print_info "The current directory is: $current_directory"
+
+
+print_info "spk2utt file generation in $KALDI_INSTALLATION_PATH/egs/$project_name/data/train"
+utils/fix_data_dir.sh data/train
+status=$?
+if [ $status -eq 1 ]; then
+    ((nbr_error++))
+    print_error "Error generating the spk2utt file"
+fi
+
+
+cd "$script_path" || exit 1
+print_info "The current directory is: $script_path"
 
 delete_in_lang_local_auto_generated_file "$project_name"
 status=$?
@@ -182,6 +230,39 @@ while [[ ! $response =~ ^[YyNn]$ ]]; do
         echo "Invalid response. Please enter 'y' for yes or 'n' for no."
     fi
 done
+
+
+print_info "*********************** Creation of configuration files for feature extraction ***********************"
+if ! is_file_exist $pitch_conf_file_path; then
+        print_warning "File doesn't exist : $pitch_conf_file_path"
+        print_info "Creating and configuring the pitch.conf file in the $KALDI_INSTALLATION_PATH/egs/$project_name/conf directory"
+        echo "--sample-frequency=16000" >> "$pitch_conf_file_path"
+        echo "--frame-length=25.0" >> "$pitch_conf_file_path"
+        echo "--frame-shift=10.0" >> "$pitch_conf_file_path"
+        echo "--snip-edges=true" >> "$pitch_conf_file_path"
+        echo "--min-f0=50" >> "$pitch_conf_file_path"
+        echo "--max-f0=400" >> "$pitch_conf_file_path"
+        echo "--soft-min-f0=10.0" >> "$pitch_conf_file_path"
+        echo "--penalty-factor=0.1" >> "$pitch_conf_file_path"
+        echo "--delta-pitch=0.005" >> "$pitch_conf_file_path"
+        ((nbr_warning++))
+fi
+
+if ! is_file_exist $mfcc_conf_file_path; then
+    print_warning "File doesn't exist : $mfcc_conf_file_path"
+    print_info "Creating and configuring the mfcc.conf file in the $KALDI_INSTALLATION_PATH/egs/$project_name/conf directory "
+    echo "--use-energy=false" >> "$mfcc_conf_file_path"
+    echo "--sample-frequency=16000" >> "$mfcc_conf_file_path"
+
+    echo "--frame-length=25.0" >> "$mfcc_conf_file_path"
+    echo "--frame-shift=10.0" >> "$mfcc_conf_file_path"
+    echo "--num-mel-bins=23" >> "$mfcc_conf_file_path"
+    echo "--num-ceps=10" >> "$mfcc_conf_file_path"
+    echo "--low-freq=20" >> "$mfcc_conf_file_path"
+    echo "--high-freq=-400" >> "$mfcc_conf_file_path"
+
+    ((nbr_warning++))
+fi
 
 
 print_info "Deactivate virtual environment $python_virtual_environement_path"
